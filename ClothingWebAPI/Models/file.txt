@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ClothingWebAPI.Models
+{
+    public class file
+    {
+        Scaffold-DbContext "Server=.;Database=CLOTHING_STORE;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+    }
+}
