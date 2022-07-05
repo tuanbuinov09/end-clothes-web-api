@@ -11,12 +11,10 @@ namespace ClothingWebAPI.Models
         }
 
         public string MaHd { get; set; }
-        public string MaGh { get; set; }
+        public int IdGh { get; set; }
         public DateTime NgayTao { get; set; }
-        public string MaNvDuyet { get; set; }
-        public string MaNvGiaoHang { get; set; }
 
-        public GioHang MaGhNavigation { get; set; }
+        public GioHang IdGhNavigation { get; set; }
         public ICollection<PhieuTra> PhieuTra { get; set; }
     }
 }

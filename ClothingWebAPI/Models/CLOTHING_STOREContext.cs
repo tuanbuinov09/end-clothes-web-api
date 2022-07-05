@@ -105,14 +105,11 @@ namespace ClothingWebAPI.Models
 
             modelBuilder.Entity<ChiTietGioHang>(entity =>
             {
-                entity.HasKey(e => new { e.MaGh, e.MaCtSp });
+                entity.HasKey(e => new { e.IdGh, e.MaCtSp });
 
                 entity.ToTable("CHI_TIET_GIO_HANG");
 
-                entity.Property(e => e.MaGh)
-                    .HasColumnName("MA_GH")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
+                entity.Property(e => e.IdGh).HasColumnName("ID_GH");
 
                 entity.Property(e => e.MaCtSp)
                     .HasColumnName("MA_CT_SP")
@@ -123,17 +120,17 @@ namespace ClothingWebAPI.Models
 
                 entity.Property(e => e.SoLuong).HasColumnName("SO_LUONG");
 
+                entity.HasOne(d => d.IdGhNavigation)
+                    .WithMany(p => p.ChiTietGioHang)
+                    .HasForeignKey(d => d.IdGh)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CHI_TIET_GIO_HANG_GIO_HANG");
+
                 entity.HasOne(d => d.MaCtSpNavigation)
                     .WithMany(p => p.ChiTietGioHang)
                     .HasForeignKey(d => d.MaCtSp)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_GIO_HANG_CHI_TIET_SAN_PHAM");
-
-                entity.HasOne(d => d.MaGhNavigation)
-                    .WithMany(p => p.ChiTietGioHang)
-                    .HasForeignKey(d => d.MaGh)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CHI_TIET_GIO_HANG_GIO_HANG");
             });
 
             modelBuilder.Entity<ChiTietKhuyenMai>(entity =>
@@ -245,7 +242,7 @@ namespace ClothingWebAPI.Models
 
                 entity.Property(e => e.Gia)
                     .HasColumnName("GIA")
-                    .HasMaxLength(10);
+                    .HasColumnType("money");
 
                 entity.Property(e => e.MaSize)
                     .IsRequired()
@@ -304,15 +301,11 @@ namespace ClothingWebAPI.Models
 
             modelBuilder.Entity<GioHang>(entity =>
             {
-                entity.HasKey(e => e.MaGh);
+                entity.HasKey(e => e.IdGh);
 
                 entity.ToTable("GIO_HANG");
 
-                entity.Property(e => e.MaGh)
-                    .HasColumnName("MA_GH")
-                    .HasMaxLength(15)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdGh).HasColumnName("ID_GH");
 
                 entity.Property(e => e.DiaChi)
                     .HasColumnName("DIA_CHI")
@@ -341,6 +334,10 @@ namespace ClothingWebAPI.Models
                     .HasColumnName("MA_NV_GIAO")
                     .HasMaxLength(15)
                     .IsUnicode(false);
+
+                entity.Property(e => e.NgayTao)
+                    .HasColumnName("NGAY_TAO")
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Sdt)
                     .HasColumnName("SDT")
@@ -371,8 +368,8 @@ namespace ClothingWebAPI.Models
 
                 entity.ToTable("HOA_DON");
 
-                entity.HasIndex(e => e.MaGh)
-                    .HasName("UQ_MA_GH_HOA_DON")
+                entity.HasIndex(e => e.IdGh)
+                    .HasName("UQ_ID_GH_HOA_DON")
                     .IsUnique();
 
                 entity.Property(e => e.MaHd)
@@ -381,29 +378,15 @@ namespace ClothingWebAPI.Models
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.MaGh)
-                    .IsRequired()
-                    .HasColumnName("MA_GH")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.MaNvDuyet)
-                    .HasColumnName("MA_NV_DUYET")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.MaNvGiaoHang)
-                    .HasColumnName("MA_NV_GIAO_HANG")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
+                entity.Property(e => e.IdGh).HasColumnName("ID_GH");
 
                 entity.Property(e => e.NgayTao)
                     .HasColumnName("NGAY_TAO")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.MaGhNavigation)
+                entity.HasOne(d => d.IdGhNavigation)
                     .WithOne(p => p.HoaDon)
-                    .HasForeignKey<HoaDon>(d => d.MaGh)
+                    .HasForeignKey<HoaDon>(d => d.IdGh)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HOA_DON_GIO_HANG");
             });
