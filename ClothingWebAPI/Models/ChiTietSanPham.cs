@@ -16,7 +16,7 @@ namespace ClothingWebAPI.Models
         public string MaCtSp { get; set; }
         public string MaSp { get; set; }
         public string MaSize { get; set; }
-        public string Gia { get; set; }
+        public decimal? Gia { get; set; }
         public int? SlTon { get; set; }
 
         public BangSize MaSizeNavigation { get; set; }

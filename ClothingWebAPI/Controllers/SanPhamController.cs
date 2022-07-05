@@ -26,30 +26,30 @@ namespace ClothingWebAPI.Controllers
         }
 
 
-        [HttpGet]
-        public JsonResult Get()
-        {
-            string query = @"Select * from SAN_PHAM";
-            DataTable dataTable = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("CLOTHING_STORE_CONN");
-            SqlDataReader sqlDataReader;
-            using (SqlConnection myConn = new SqlConnection(sqlDataSource))
-            {
-                myConn.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myConn))
-                {
-                    sqlDataReader = myCommand.ExecuteReader();
-                    dataTable.Load(sqlDataReader);
-                    sqlDataReader.Close();
-                    myConn.Close();
-                }
-            }
+        //[HttpGet]
+        //public JsonResult Get()
+        //{
+        //    string query = @"Select * from SAN_PHAM";
+        //    DataTable dataTable = new DataTable();
+        //    string sqlDataSource = _configuration.GetConnectionString("CLOTHING_STORE_CONN");
+        //    SqlDataReader sqlDataReader;
+        //    using (SqlConnection myConn = new SqlConnection(sqlDataSource))
+        //    {
+        //        myConn.Open();
+        //        using (SqlCommand myCommand = new SqlCommand(query, myConn))
+        //        {
+        //            sqlDataReader = myCommand.ExecuteReader();
+        //            dataTable.Load(sqlDataReader);
+        //            sqlDataReader.Close();
+        //            myConn.Close();
+        //        }
+        //    }
 
-            return new JsonResult(dataTable);
-        }
+        //    return new JsonResult(dataTable);
+        //}
         [HttpGet]
-        [Route("get2")]
-        public JsonResult Get2()
+        [Route("all")]
+        public JsonResult Get()
         {
             
             using (var db = new CLOTHING_STOREContext())
