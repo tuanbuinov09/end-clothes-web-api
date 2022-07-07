@@ -67,6 +67,11 @@ namespace ClothingWebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Use cors
+            app.UseCors(options => {
+                options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
