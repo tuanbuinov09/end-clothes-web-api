@@ -48,19 +48,70 @@ namespace ClothingWebAPI.Controllers
         //    return new JsonResult(dataTable);
         //}
         [HttpGet]
-        [Route("all")]
-        public JsonResult Get()
+        [Route("")]
+        public IEnumerable<SanPham> GetOne([FromQuery(Name = "productId")] string productId)
         {
-            
+            if (productId != null)
+            {
+                using (var db = new CLOTHING_STOREContext())
+                {
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).Where(sanPham=>sanPham.MaSp==productId);
+                    return listSanPham;
+
+                }
+            }
             using (var db = new CLOTHING_STOREContext())
             {
-                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ToList();
-                return new JsonResult(listSanPham);
+                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.NgayTao).ToList();
+                return listSanPham;
+
+            }
+            return null;
+        }
+        [HttpGet]
+        [Route("new-arrivals")]
+        public IEnumerable<SanPham> GetNewArrivals([FromQuery(Name = "offset")] string offset, [FromQuery(Name = "limit")] string limit)
+        {
+            if (offset != null & limit != null)
+            {
+                using (var db = new CLOTHING_STOREContext())
+                {
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.NgayTao).Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
+                    return listSanPham;
+
+                }
+            }
+            using (var db = new CLOTHING_STOREContext())
+            {
+                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.NgayTao).ToList();
+                return listSanPham;
+
+            }
+            return null;
+        }
+       
+        [HttpGet]
+        [Route("most-viewed")]
+        public IEnumerable<SanPham> GetMostViewed([FromQuery(Name = "offset")] string offset, [FromQuery(Name = "limit")] string limit)
+        {
+            if(offset!=null & limit != null)
+            {
+                using (var db = new CLOTHING_STOREContext())
+                {
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.LuotXem).Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
+                    return listSanPham;
+
+                }
+            }
+            using (var db = new CLOTHING_STOREContext())
+            {
+                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.LuotXem).ToList();
+                return listSanPham;
+
             }
 
             return null;
         }
-
         //[HttpGet]
         //public async Task<IEnumerable<SanPham>> GetAsync()
         //{

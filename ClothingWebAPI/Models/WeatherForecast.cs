@@ -1,6 +1,6 @@
 using System;
 
-namespace ClothingWebAPI
+namespace ClothingWebAPI.Models
 {
     public class WeatherForecast
     {
