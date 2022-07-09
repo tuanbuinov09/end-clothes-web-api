@@ -31,12 +31,25 @@ namespace ClothingWebAPI.Controllers
             
             using (var db = new CLOTHING_STOREContext())
             {
-                var listTheLoaiBac1 = db.TheLoai.ToList();
-                return listTheLoaiBac1;
+                var listTheLoai = db.TheLoai.ToList();
+                return listTheLoai;
             }
 
             return null;
         }
-        
+
+        [Route("product")]
+        [HttpGet]
+        public IEnumerable<TheLoai> GetAllProductOfTheLoai()
+        {
+
+            using (var db = new CLOTHING_STOREContext())
+            {
+                var listTheLoai = db.TheLoai.Include(theLoai => theLoai.SanPham).ToList();
+                return listTheLoai;
+            }
+
+            return null;
+        }
     }
 }

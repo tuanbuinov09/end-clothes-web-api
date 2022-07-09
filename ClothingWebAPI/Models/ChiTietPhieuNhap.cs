@@ -8,7 +8,7 @@ namespace ClothingWebAPI.Models
         public string MaPn { get; set; }
         public string MaCtSp { get; set; }
         public int? SoLuong { get; set; }
-        public double? Gia { get; set; }
+        public int? Gia { get; set; }
 
         public ChiTietSanPham MaCtSpNavigation { get; set; }
         public PhieuNhap MaPnNavigation { get; set; }

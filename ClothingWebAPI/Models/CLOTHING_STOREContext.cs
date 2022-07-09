@@ -28,7 +28,7 @@ namespace ClothingWebAPI.Models
         public virtual DbSet<HoaDon> HoaDon { get; set; }
         public virtual DbSet<KhachHang> KhachHang { get; set; }
         public virtual DbSet<KhuyenMai> KhuyenMai { get; set; }
-        public virtual DbSet<NhaCungCap> NhaCungCap { get; set; }
+        public virtual DbSet<NhaCungCapPendingDelete> NhaCungCapPendingDelete { get; set; }
         public virtual DbSet<NhanVien> NhanVien { get; set; }
         public virtual DbSet<PhieuNhap> PhieuNhap { get; set; }
         public virtual DbSet<PhieuTra> PhieuTra { get; set; }
@@ -240,9 +240,7 @@ namespace ClothingWebAPI.Models
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Gia)
-                    .HasColumnName("GIA")
-                    .HasColumnType("money");
+                entity.Property(e => e.Gia).HasColumnName("GIA");
 
                 entity.Property(e => e.MaSize)
                     .IsRequired()
@@ -468,11 +466,11 @@ namespace ClothingWebAPI.Models
                     .HasConstraintName("FK_KHUYEN_MAI_NHAN_VIEN");
             });
 
-            modelBuilder.Entity<NhaCungCap>(entity =>
+            modelBuilder.Entity<NhaCungCapPendingDelete>(entity =>
             {
                 entity.HasKey(e => e.MaNcc);
 
-                entity.ToTable("NHA_CUNG_CAP");
+                entity.ToTable("NHA_CUNG_CAP_PENDING_DELETE");
 
                 entity.Property(e => e.MaNcc)
                     .HasColumnName("MA_NCC")
