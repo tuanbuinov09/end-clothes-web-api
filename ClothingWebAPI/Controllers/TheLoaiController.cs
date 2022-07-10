@@ -24,7 +24,7 @@ namespace ClothingWebAPI.Controllers
             _logger = logger;
             _configuration = configuration;
         }
-
+        [Route("")]
         [HttpGet]
         public IEnumerable<TheLoai> GetAll()
         {
@@ -40,13 +40,13 @@ namespace ClothingWebAPI.Controllers
 
         [Route("product")]
         [HttpGet]
-        public IEnumerable<TheLoai> GetAllProductOfTheLoai()
+        public IEnumerable<SanPham> GetAllProductOfTheLoai([FromQuery(Name = "categoryId")] string categoryId)
         {
 
             using (var db = new CLOTHING_STOREContext())
             {
-                var listTheLoai = db.TheLoai.Include(theLoai => theLoai.SanPham).ToList();
-                return listTheLoai;
+                var listSanPhamCuaTheLoai = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham => sanPham.ChiTietKhuyenMai).Where(sanPham => sanPham.MaTl == categoryId).ToList();
+                return listSanPhamCuaTheLoai;
             }
 
             return null;

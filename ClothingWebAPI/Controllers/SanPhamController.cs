@@ -49,23 +49,31 @@ namespace ClothingWebAPI.Controllers
         //}
         [HttpGet]
         [Route("")]
+        public IEnumerable<SanPham> GetAll()
+        {
+                using (var db = new CLOTHING_STOREContext())
+                {
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham => sanPham.ChiTietKhuyenMai).OrderByDescending(sanPham => sanPham.NgayTao).ToList();
+                    return listSanPham;
+
+                }
+            return null;
+        }
+
+        [HttpGet]
+        [Route("ById")]
         public IEnumerable<SanPham> GetOne([FromQuery(Name = "productId")] string productId)
         {
             if (productId != null)
             {
                 using (var db = new CLOTHING_STOREContext())
                 {
-                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).Where(sanPham=>sanPham.MaSp==productId);
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham=>sanPham.ChiTietKhuyenMai).Where(sanPham=>sanPham.MaSp==productId);
                     return listSanPham;
 
                 }
             }
-            using (var db = new CLOTHING_STOREContext())
-            {
-                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.NgayTao).ToList();
-                return listSanPham;
-
-            }
+           
             return null;
         }
         [HttpGet]
@@ -76,14 +84,14 @@ namespace ClothingWebAPI.Controllers
             {
                 using (var db = new CLOTHING_STOREContext())
                 {
-                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.NgayTao).Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham => sanPham.ChiTietKhuyenMai).OrderByDescending(sanPham => sanPham.NgayTao).Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
                     return listSanPham;
 
                 }
             }
             using (var db = new CLOTHING_STOREContext())
             {
-                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.NgayTao).ToList();
+                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham => sanPham.ChiTietKhuyenMai).OrderByDescending(sanPham => sanPham.NgayTao).ToList();
                 return listSanPham;
 
             }
@@ -98,14 +106,14 @@ namespace ClothingWebAPI.Controllers
             {
                 using (var db = new CLOTHING_STOREContext())
                 {
-                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.LuotXem).Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
+                    var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham => sanPham.ChiTietKhuyenMai).OrderByDescending(sanPham => sanPham.LuotXem).Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
                     return listSanPham;
 
                 }
             }
             using (var db = new CLOTHING_STOREContext())
             {
-                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).OrderByDescending(sanPham => sanPham.LuotXem).ToList();
+                var listSanPham = db.SanPham.Include(sanPham => sanPham.ChiTietSanPham).ThenInclude(sanPham => sanPham.ChiTietKhuyenMai).OrderByDescending(sanPham => sanPham.LuotXem).ToList();
                 return listSanPham;
 
             }
