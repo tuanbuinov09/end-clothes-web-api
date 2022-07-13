@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
-    public partial class Quyen
+    public partial class QUYEN
     {
-        public Quyen()
+        public QUYEN()
         {
-            TaiKhoan = new HashSet<TaiKhoan>();
+            TAI_KHOAN = new HashSet<TAI_KHOAN>();
         }
 
-        public string MaQuyen { get; set; }
-        public string TenQuyen { get; set; }
+        public string MA_QUYEN { get; set; }
+        public string TEN_QUYEN { get; set; }
 
-        public ICollection<TaiKhoan> TaiKhoan { get; set; }
+        public ICollection<TAI_KHOAN> TAI_KHOAN { get; set; }
     }
 }

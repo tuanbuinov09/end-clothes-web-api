@@ -24,19 +24,34 @@ namespace ClothingWebAPI.Controllers
             _logger = logger;
             _configuration = configuration;
         }
-
+        [Route("")]
         [HttpGet]
-        public IEnumerable<TheLoai> GetAll()
+        public IEnumerable<THE_LOAI> GetAll()
         {
-            
+
             using (var db = new CLOTHING_STOREContext())
             {
-                var listTheLoaiBac1 = db.TheLoai.ToList();
-                return listTheLoaiBac1;
+                var listTheLoai = db.THE_LOAI.ToList();
+                return listTheLoai;
             }
 
             return null;
         }
-        
+
+        [Route("product")]
+        [HttpGet]
+        public IEnumerable<SAN_PHAM> GetAllProductOfTheLoai([FromQuery(Name = "categoryId")] string categoryId)
+        {
+
+            using (var db = new CLOTHING_STOREContext())
+            {
+                var listSanPhamCuaTheLoai = db.SAN_PHAM.Include(sanPham => sanPham.CHI_TIET_SAN_PHAM)
+                    .Include(sanPham => sanPham.CHI_TIET_KHUYEN_MAI)
+                    .Where(sanPham => sanPham.MA_TL == categoryId || sanPham.MA_TLNavigation.MA_TL_CHA==categoryId).ToList();
+                return listSanPhamCuaTheLoai;
+            }
+
+            return null;
+        }
     }
 }
