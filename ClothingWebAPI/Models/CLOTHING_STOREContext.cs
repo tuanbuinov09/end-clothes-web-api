@@ -15,27 +15,27 @@ namespace ClothingWebAPI.Models
         {
         }
 
-        public virtual DbSet<BangMauPendingDelete> BangMauPendingDelete { get; set; }
-        public virtual DbSet<BangSize> BangSize { get; set; }
-        public virtual DbSet<ChiTietDonDatHangPendingDelete> ChiTietDonDatHangPendingDelete { get; set; }
-        public virtual DbSet<ChiTietGioHang> ChiTietGioHang { get; set; }
-        public virtual DbSet<ChiTietKhuyenMai> ChiTietKhuyenMai { get; set; }
-        public virtual DbSet<ChiTietPhieuNhap> ChiTietPhieuNhap { get; set; }
-        public virtual DbSet<ChiTietPhieuTra> ChiTietPhieuTra { get; set; }
-        public virtual DbSet<ChiTietSanPham> ChiTietSanPham { get; set; }
-        public virtual DbSet<DonDatHangPendingDelete> DonDatHangPendingDelete { get; set; }
-        public virtual DbSet<GioHang> GioHang { get; set; }
-        public virtual DbSet<HoaDon> HoaDon { get; set; }
-        public virtual DbSet<KhachHang> KhachHang { get; set; }
-        public virtual DbSet<KhuyenMai> KhuyenMai { get; set; }
-        public virtual DbSet<NhaCungCapPendingDelete> NhaCungCapPendingDelete { get; set; }
-        public virtual DbSet<NhanVien> NhanVien { get; set; }
-        public virtual DbSet<PhieuNhap> PhieuNhap { get; set; }
-        public virtual DbSet<PhieuTra> PhieuTra { get; set; }
-        public virtual DbSet<Quyen> Quyen { get; set; }
-        public virtual DbSet<SanPham> SanPham { get; set; }
-        public virtual DbSet<TaiKhoan> TaiKhoan { get; set; }
-        public virtual DbSet<TheLoai> TheLoai { get; set; }
+        public virtual DbSet<BANG_MAU_PENDING_DELETE> BANG_MAU_PENDING_DELETE { get; set; }
+        public virtual DbSet<BANG_SIZE> BANG_SIZE { get; set; }
+        public virtual DbSet<CHI_TIET_DON_DAT_HANG_PENDING_DELETE> CHI_TIET_DON_DAT_HANG_PENDING_DELETE { get; set; }
+        public virtual DbSet<CHI_TIET_GIO_HANG> CHI_TIET_GIO_HANG { get; set; }
+        public virtual DbSet<CHI_TIET_KHUYEN_MAI> CHI_TIET_KHUYEN_MAI { get; set; }
+        public virtual DbSet<CHI_TIET_PHIEU_NHAP> CHI_TIET_PHIEU_NHAP { get; set; }
+        public virtual DbSet<CHI_TIET_PHIEU_TRA> CHI_TIET_PHIEU_TRA { get; set; }
+        public virtual DbSet<CHI_TIET_SAN_PHAM> CHI_TIET_SAN_PHAM { get; set; }
+        public virtual DbSet<DON_DAT_HANG_PENDING_DELETE> DON_DAT_HANG_PENDING_DELETE { get; set; }
+        public virtual DbSet<GIO_HANG> GIO_HANG { get; set; }
+        public virtual DbSet<HOA_DON> HOA_DON { get; set; }
+        public virtual DbSet<KHACH_HANG> KHACH_HANG { get; set; }
+        public virtual DbSet<KHUYEN_MAI> KHUYEN_MAI { get; set; }
+        public virtual DbSet<NHA_CUNG_CAP_PENDING_DELETE> NHA_CUNG_CAP_PENDING_DELETE { get; set; }
+        public virtual DbSet<NHAN_VIEN> NHAN_VIEN { get; set; }
+        public virtual DbSet<PHIEU_NHAP> PHIEU_NHAP { get; set; }
+        public virtual DbSet<PHIEU_TRA> PHIEU_TRA { get; set; }
+        public virtual DbSet<QUYEN> QUYEN { get; set; }
+        public virtual DbSet<SAN_PHAM> SAN_PHAM { get; set; }
+        public virtual DbSet<TAI_KHOAN> TAI_KHOAN { get; set; }
+        public virtual DbSet<THE_LOAI> THE_LOAI { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,679 +48,516 @@ namespace ClothingWebAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BangMauPendingDelete>(entity =>
+            modelBuilder.Entity<BANG_MAU_PENDING_DELETE>(entity =>
             {
-                entity.HasKey(e => e.MaMau);
+                entity.HasKey(e => e.MA_MAU);
 
-                entity.ToTable("BANG_MAU_PENDING_DELETE");
-
-                entity.Property(e => e.MaMau)
-                    .HasColumnName("MA_MAU")
+                entity.Property(e => e.MA_MAU)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.TenMau)
-                    .HasColumnName("TEN_MAU")
-                    .HasMaxLength(50);
+                entity.Property(e => e.TEN_MAU).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<BangSize>(entity =>
+            modelBuilder.Entity<BANG_SIZE>(entity =>
             {
-                entity.HasKey(e => e.MaSize);
+                entity.HasKey(e => e.MA_SIZE);
 
-                entity.ToTable("BANG_SIZE");
-
-                entity.Property(e => e.MaSize)
-                    .HasColumnName("MA_SIZE")
+                entity.Property(e => e.MA_SIZE)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.TenSize)
-                    .HasColumnName("TEN_SIZE")
-                    .HasMaxLength(50);
+                entity.Property(e => e.TEN_SIZE).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<ChiTietDonDatHangPendingDelete>(entity =>
+            modelBuilder.Entity<CHI_TIET_DON_DAT_HANG_PENDING_DELETE>(entity =>
             {
-                entity.HasKey(e => new { e.MaDdh, e.MaCtSp });
+                entity.HasKey(e => new { e.MA_DDH, e.MA_CT_SP });
 
-                entity.ToTable("CHI_TIET_DON_DAT_HANG_PENDING_DELETE");
-
-                entity.Property(e => e.MaDdh)
-                    .HasColumnName("MA_DDH")
+                entity.Property(e => e.MA_DDH)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaCtSp)
-                    .HasColumnName("MA_CT_SP")
+                entity.Property(e => e.MA_CT_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Gia).HasColumnName("GIA");
-
-                entity.Property(e => e.SoLuong).HasColumnName("SO_LUONG");
             });
 
-            modelBuilder.Entity<ChiTietGioHang>(entity =>
+            modelBuilder.Entity<CHI_TIET_GIO_HANG>(entity =>
             {
-                entity.HasKey(e => new { e.IdGh, e.MaCtSp });
+                entity.HasKey(e => new { e.ID_GH, e.MA_CT_SP });
 
-                entity.ToTable("CHI_TIET_GIO_HANG");
-
-                entity.Property(e => e.IdGh).HasColumnName("ID_GH");
-
-                entity.Property(e => e.MaCtSp)
-                    .HasColumnName("MA_CT_SP")
+                entity.Property(e => e.MA_CT_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Gia).HasColumnName("GIA");
-
-                entity.Property(e => e.SoLuong).HasColumnName("SO_LUONG");
-
-                entity.HasOne(d => d.IdGhNavigation)
-                    .WithMany(p => p.ChiTietGioHang)
-                    .HasForeignKey(d => d.IdGh)
+                entity.HasOne(d => d.ID_GHNavigation)
+                    .WithMany(p => p.CHI_TIET_GIO_HANG)
+                    .HasForeignKey(d => d.ID_GH)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_GIO_HANG_GIO_HANG");
 
-                entity.HasOne(d => d.MaCtSpNavigation)
-                    .WithMany(p => p.ChiTietGioHang)
-                    .HasForeignKey(d => d.MaCtSp)
+                entity.HasOne(d => d.MA_CT_SPNavigation)
+                    .WithMany(p => p.CHI_TIET_GIO_HANG)
+                    .HasForeignKey(d => d.MA_CT_SP)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_GIO_HANG_CHI_TIET_SAN_PHAM");
             });
 
-            modelBuilder.Entity<ChiTietKhuyenMai>(entity =>
+            modelBuilder.Entity<CHI_TIET_KHUYEN_MAI>(entity =>
             {
-                entity.HasKey(e => new { e.MaKm, e.MaCtSp });
+                entity.HasKey(e => new { e.MA_KM, e.MA_SP });
 
-                entity.ToTable("CHI_TIET_KHUYEN_MAI");
-
-                entity.Property(e => e.MaKm)
-                    .HasColumnName("MA_KM")
+                entity.Property(e => e.MA_KM)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaCtSp)
-                    .HasColumnName("MA_CT_SP")
+                entity.Property(e => e.MA_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PhanTramGiam).HasColumnName("PHAN_TRAM_GIAM");
-
-                entity.HasOne(d => d.MaCtSpNavigation)
-                    .WithMany(p => p.ChiTietKhuyenMai)
-                    .HasForeignKey(d => d.MaCtSp)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CHI_TIET_KHUYEN_MAI_CHI_TIET_SAN_PHAM");
-
-                entity.HasOne(d => d.MaKmNavigation)
-                    .WithMany(p => p.ChiTietKhuyenMai)
-                    .HasForeignKey(d => d.MaKm)
+                entity.HasOne(d => d.MA_KMNavigation)
+                    .WithMany(p => p.CHI_TIET_KHUYEN_MAI)
+                    .HasForeignKey(d => d.MA_KM)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_KHUYEN_MAI_KHUYEN_MAI");
+
+                entity.HasOne(d => d.MA_SPNavigation)
+                    .WithMany(p => p.CHI_TIET_KHUYEN_MAI)
+                    .HasForeignKey(d => d.MA_SP)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CHI_TIET_KHUYEN_MAI_SAN_PHAM");
             });
 
-            modelBuilder.Entity<ChiTietPhieuNhap>(entity =>
+            modelBuilder.Entity<CHI_TIET_PHIEU_NHAP>(entity =>
             {
-                entity.HasKey(e => new { e.MaPn, e.MaCtSp });
+                entity.HasKey(e => new { e.MA_PN, e.MA_CT_SP });
 
-                entity.ToTable("CHI_TIET_PHIEU_NHAP");
-
-                entity.Property(e => e.MaPn)
-                    .HasColumnName("MA_PN")
+                entity.Property(e => e.MA_PN)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaCtSp)
-                    .HasColumnName("MA_CT_SP")
+                entity.Property(e => e.MA_CT_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Gia).HasColumnName("GIA");
-
-                entity.Property(e => e.SoLuong).HasColumnName("SO_LUONG");
-
-                entity.HasOne(d => d.MaCtSpNavigation)
-                    .WithMany(p => p.ChiTietPhieuNhap)
-                    .HasForeignKey(d => d.MaCtSp)
+                entity.HasOne(d => d.MA_CT_SPNavigation)
+                    .WithMany(p => p.CHI_TIET_PHIEU_NHAP)
+                    .HasForeignKey(d => d.MA_CT_SP)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_PHIEU_NHAP_CHI_TIET_SAN_PHAM");
 
-                entity.HasOne(d => d.MaPnNavigation)
-                    .WithMany(p => p.ChiTietPhieuNhap)
-                    .HasForeignKey(d => d.MaPn)
+                entity.HasOne(d => d.MA_PNNavigation)
+                    .WithMany(p => p.CHI_TIET_PHIEU_NHAP)
+                    .HasForeignKey(d => d.MA_PN)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_PHIEU_NHAP_PHIEU_NHAP");
             });
 
-            modelBuilder.Entity<ChiTietPhieuTra>(entity =>
+            modelBuilder.Entity<CHI_TIET_PHIEU_TRA>(entity =>
             {
-                entity.HasKey(e => new { e.MaPt, e.MaCtSp });
+                entity.HasKey(e => new { e.MA_PT, e.MA_CT_SP });
 
-                entity.ToTable("CHI_TIET_PHIEU_TRA");
-
-                entity.Property(e => e.MaPt)
-                    .HasColumnName("MA_PT")
+                entity.Property(e => e.MA_PT)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaCtSp)
-                    .HasColumnName("MA_CT_SP")
+                entity.Property(e => e.MA_CT_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SoLuong).HasColumnName("SO_LUONG");
-
-                entity.HasOne(d => d.MaCtSpNavigation)
-                    .WithMany(p => p.ChiTietPhieuTra)
-                    .HasForeignKey(d => d.MaCtSp)
+                entity.HasOne(d => d.MA_CT_SPNavigation)
+                    .WithMany(p => p.CHI_TIET_PHIEU_TRA)
+                    .HasForeignKey(d => d.MA_CT_SP)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_PHIEU_TRA_CHI_TIET_SAN_PHAM");
 
-                entity.HasOne(d => d.MaPtNavigation)
-                    .WithMany(p => p.ChiTietPhieuTra)
-                    .HasForeignKey(d => d.MaPt)
+                entity.HasOne(d => d.MA_PTNavigation)
+                    .WithMany(p => p.CHI_TIET_PHIEU_TRA)
+                    .HasForeignKey(d => d.MA_PT)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_PHIEU_TRA_PHIEU_TRA");
             });
 
-            modelBuilder.Entity<ChiTietSanPham>(entity =>
+            modelBuilder.Entity<CHI_TIET_SAN_PHAM>(entity =>
             {
-                entity.HasKey(e => e.MaCtSp);
+                entity.HasKey(e => e.MA_CT_SP);
 
-                entity.ToTable("CHI_TIET_SAN_PHAM");
-
-                entity.Property(e => e.MaCtSp)
-                    .HasColumnName("MA_CT_SP")
+                entity.Property(e => e.MA_CT_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Gia).HasColumnName("GIA");
-
-                entity.Property(e => e.MaSize)
+                entity.Property(e => e.MA_SIZE)
                     .IsRequired()
-                    .HasColumnName("MA_SIZE")
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaSp)
+                entity.Property(e => e.MA_SP)
                     .IsRequired()
-                    .HasColumnName("MA_SP")
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SlTon).HasColumnName("SL_TON");
-
-                entity.HasOne(d => d.MaSizeNavigation)
-                    .WithMany(p => p.ChiTietSanPham)
-                    .HasForeignKey(d => d.MaSize)
+                entity.HasOne(d => d.MA_SIZENavigation)
+                    .WithMany(p => p.CHI_TIET_SAN_PHAM)
+                    .HasForeignKey(d => d.MA_SIZE)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_SAN_PHAM_BANG_SIZE");
 
-                entity.HasOne(d => d.MaSpNavigation)
-                    .WithMany(p => p.ChiTietSanPham)
-                    .HasForeignKey(d => d.MaSp)
+                entity.HasOne(d => d.MA_SPNavigation)
+                    .WithMany(p => p.CHI_TIET_SAN_PHAM)
+                    .HasForeignKey(d => d.MA_SP)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CHI_TIET_SAN_PHAM_SAN_PHAM");
             });
 
-            modelBuilder.Entity<DonDatHangPendingDelete>(entity =>
+            modelBuilder.Entity<DON_DAT_HANG_PENDING_DELETE>(entity =>
             {
-                entity.HasKey(e => e.MaDdh);
+                entity.HasKey(e => e.MA_DDH);
 
-                entity.ToTable("DON_DAT_HANG_PENDING_DELETE");
-
-                entity.Property(e => e.MaDdh)
-                    .HasColumnName("MA_DDH")
+                entity.Property(e => e.MA_DDH)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.MaNcc)
+                entity.Property(e => e.MA_NCC)
                     .IsRequired()
-                    .HasColumnName("MA_NCC")
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaNv)
-                    .HasColumnName("MA_NV")
+                entity.Property(e => e.MA_NV)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NgayTao)
-                    .HasColumnName("NGAY_TAO")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<GioHang>(entity =>
+            modelBuilder.Entity<GIO_HANG>(entity =>
             {
-                entity.HasKey(e => e.IdGh);
+                entity.HasKey(e => e.ID_GH);
 
-                entity.ToTable("GIO_HANG");
+                entity.Property(e => e.DIA_CHI).HasMaxLength(200);
 
-                entity.Property(e => e.IdGh).HasColumnName("ID_GH");
-
-                entity.Property(e => e.DiaChi)
-                    .HasColumnName("DIA_CHI")
-                    .HasMaxLength(200);
-
-                entity.Property(e => e.Email)
-                    .HasColumnName("EMAIL")
+                entity.Property(e => e.EMAIL)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.HoTen)
-                    .HasColumnName("HO_TEN")
-                    .HasMaxLength(60);
+                entity.Property(e => e.HO_TEN).HasMaxLength(60);
 
-                entity.Property(e => e.MaKh)
-                    .HasColumnName("MA_KH")
+                entity.Property(e => e.MA_KH)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaNvDuyet)
-                    .HasColumnName("MA_NV_DUYET")
+                entity.Property(e => e.MA_NV_DUYET)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaNvGiao)
-                    .HasColumnName("MA_NV_GIAO")
+                entity.Property(e => e.MA_NV_GIAO)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NgayTao)
-                    .HasColumnName("NGAY_TAO")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
-                entity.Property(e => e.Sdt)
-                    .HasColumnName("SDT")
+                entity.Property(e => e.SDT)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TrangThai).HasColumnName("TRANG_THAI");
-
-                entity.HasOne(d => d.MaKhNavigation)
-                    .WithMany(p => p.GioHang)
-                    .HasForeignKey(d => d.MaKh)
+                entity.HasOne(d => d.MA_KHNavigation)
+                    .WithMany(p => p.GIO_HANG)
+                    .HasForeignKey(d => d.MA_KH)
                     .HasConstraintName("FK_GIO_HANG_KHACH_HANG");
 
-                entity.HasOne(d => d.MaNvDuyetNavigation)
-                    .WithMany(p => p.GioHangMaNvDuyetNavigation)
-                    .HasForeignKey(d => d.MaNvDuyet)
+                entity.HasOne(d => d.MA_NV_DUYETNavigation)
+                    .WithMany(p => p.GIO_HANGMA_NV_DUYETNavigation)
+                    .HasForeignKey(d => d.MA_NV_DUYET)
                     .HasConstraintName("FK_GIO_HANG_NHAN_VIEN");
 
-                entity.HasOne(d => d.MaNvGiaoNavigation)
-                    .WithMany(p => p.GioHangMaNvGiaoNavigation)
-                    .HasForeignKey(d => d.MaNvGiao)
+                entity.HasOne(d => d.MA_NV_GIAONavigation)
+                    .WithMany(p => p.GIO_HANGMA_NV_GIAONavigation)
+                    .HasForeignKey(d => d.MA_NV_GIAO)
                     .HasConstraintName("FK_GIO_HANG_NHAN_VIEN1");
             });
 
-            modelBuilder.Entity<HoaDon>(entity =>
+            modelBuilder.Entity<HOA_DON>(entity =>
             {
-                entity.HasKey(e => e.MaHd);
+                entity.HasKey(e => e.MA_HD);
 
-                entity.ToTable("HOA_DON");
-
-                entity.HasIndex(e => e.IdGh)
+                entity.HasIndex(e => e.ID_GH)
                     .HasName("UQ_ID_GH_HOA_DON")
                     .IsUnique();
 
-                entity.Property(e => e.MaHd)
-                    .HasColumnName("MA_HD")
+                entity.Property(e => e.MA_HD)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.IdGh).HasColumnName("ID_GH");
+                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
-                entity.Property(e => e.NgayTao)
-                    .HasColumnName("NGAY_TAO")
-                    .HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdGhNavigation)
-                    .WithOne(p => p.HoaDon)
-                    .HasForeignKey<HoaDon>(d => d.IdGh)
+                entity.HasOne(d => d.ID_GHNavigation)
+                    .WithOne(p => p.HOA_DON)
+                    .HasForeignKey<HOA_DON>(d => d.ID_GH)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HOA_DON_GIO_HANG");
             });
 
-            modelBuilder.Entity<KhachHang>(entity =>
+            modelBuilder.Entity<KHACH_HANG>(entity =>
             {
-                entity.HasKey(e => e.MaKh);
+                entity.HasKey(e => e.MA_KH);
 
-                entity.ToTable("KHACH_HANG");
-
-                entity.HasIndex(e => e.MaTk)
+                entity.HasIndex(e => e.MA_TK)
                     .HasName("UQ_MA_TK_KHACH_HANG")
                     .IsUnique();
 
-                entity.Property(e => e.MaKh)
-                    .HasColumnName("MA_KH")
+                entity.Property(e => e.MA_KH)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.DiaChi)
-                    .HasColumnName("DIA_CHI")
-                    .HasMaxLength(200);
+                entity.Property(e => e.DIA_CHI).HasMaxLength(200);
 
-                entity.Property(e => e.Email)
-                    .HasColumnName("EMAIL")
+                entity.Property(e => e.EMAIL)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.HoTen)
-                    .HasColumnName("HO_TEN")
-                    .HasMaxLength(60);
+                entity.Property(e => e.HO_TEN).HasMaxLength(60);
 
-                entity.Property(e => e.MaSoThue)
-                    .HasColumnName("MA_SO_THUE")
+                entity.Property(e => e.MA_SO_THUE)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaTk)
-                    .HasColumnName("MA_TK")
+                entity.Property(e => e.MA_TK)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Sdt)
-                    .HasColumnName("SDT")
+                entity.Property(e => e.SDT)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.MaTkNavigation)
-                    .WithOne(p => p.KhachHang)
-                    .HasForeignKey<KhachHang>(d => d.MaTk)
+                entity.HasOne(d => d.MA_TKNavigation)
+                    .WithOne(p => p.KHACH_HANG)
+                    .HasForeignKey<KHACH_HANG>(d => d.MA_TK)
                     .HasConstraintName("FK_KHACH_HANG_TAI_KHOAN");
             });
 
-            modelBuilder.Entity<KhuyenMai>(entity =>
+            modelBuilder.Entity<KHUYEN_MAI>(entity =>
             {
-                entity.HasKey(e => e.MaKm);
+                entity.HasKey(e => e.MA_KM);
 
-                entity.ToTable("KHUYEN_MAI");
-
-                entity.Property(e => e.MaKm)
-                    .HasColumnName("MA_KM")
+                entity.Property(e => e.MA_KM)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.MaNv)
-                    .HasColumnName("MA_NV")
+                entity.Property(e => e.MA_NV)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NgayApDung)
-                    .HasColumnName("NGAY_AP_DUNG")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.MO_TA).HasMaxLength(250);
 
-                entity.HasOne(d => d.MaNvNavigation)
-                    .WithMany(p => p.KhuyenMai)
-                    .HasForeignKey(d => d.MaNv)
+                entity.Property(e => e.NGAY_AP_DUNG).HasColumnType("datetime");
+
+                entity.HasOne(d => d.MA_NVNavigation)
+                    .WithMany(p => p.KHUYEN_MAI)
+                    .HasForeignKey(d => d.MA_NV)
                     .HasConstraintName("FK_KHUYEN_MAI_NHAN_VIEN");
             });
 
-            modelBuilder.Entity<NhaCungCapPendingDelete>(entity =>
+            modelBuilder.Entity<NHA_CUNG_CAP_PENDING_DELETE>(entity =>
             {
-                entity.HasKey(e => e.MaNcc);
+                entity.HasKey(e => e.MA_NCC);
 
-                entity.ToTable("NHA_CUNG_CAP_PENDING_DELETE");
-
-                entity.Property(e => e.MaNcc)
-                    .HasColumnName("MA_NCC")
+                entity.Property(e => e.MA_NCC)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.DiaChi)
-                    .HasColumnName("DIA_CHI")
-                    .HasMaxLength(200);
+                entity.Property(e => e.DIA_CHI).HasMaxLength(200);
 
-                entity.Property(e => e.Email)
-                    .HasColumnName("EMAIL")
+                entity.Property(e => e.EMAIL)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Sdt)
-                    .HasColumnName("SDT")
+                entity.Property(e => e.SDT)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TenNcc)
+                entity.Property(e => e.TEN_NCC)
                     .IsRequired()
-                    .HasColumnName("TEN_NCC")
                     .HasMaxLength(50);
             });
 
-            modelBuilder.Entity<NhanVien>(entity =>
+            modelBuilder.Entity<NHAN_VIEN>(entity =>
             {
-                entity.HasKey(e => e.MaNv);
+                entity.HasKey(e => e.MA_NV);
 
-                entity.ToTable("NHAN_VIEN");
-
-                entity.HasIndex(e => e.MaTk)
+                entity.HasIndex(e => e.MA_TK)
                     .HasName("UQ_MA_TK")
                     .IsUnique();
 
-                entity.Property(e => e.MaNv)
-                    .HasColumnName("MA_NV")
+                entity.Property(e => e.MA_NV)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Cmnd)
-                    .HasColumnName("CMND")
+                entity.Property(e => e.CMND)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DiaChi)
-                    .HasColumnName("DIA_CHI")
-                    .HasMaxLength(200);
+                entity.Property(e => e.DIA_CHI).HasMaxLength(200);
 
-                entity.Property(e => e.Email)
-                    .HasColumnName("EMAIL")
+                entity.Property(e => e.EMAIL)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.HoTen)
-                    .HasColumnName("HO_TEN")
-                    .HasMaxLength(60);
+                entity.Property(e => e.HO_TEN).HasMaxLength(60);
 
-                entity.Property(e => e.MaTk)
-                    .HasColumnName("MA_TK")
+                entity.Property(e => e.MA_TK)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Sdt)
-                    .HasColumnName("SDT")
+                entity.Property(e => e.SDT)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.MaTkNavigation)
-                    .WithOne(p => p.NhanVien)
-                    .HasForeignKey<NhanVien>(d => d.MaTk)
+                entity.HasOne(d => d.MA_TKNavigation)
+                    .WithOne(p => p.NHAN_VIEN)
+                    .HasForeignKey<NHAN_VIEN>(d => d.MA_TK)
                     .HasConstraintName("FK_NHAN_VIEN_TAI_KHOAN");
             });
 
-            modelBuilder.Entity<PhieuNhap>(entity =>
+            modelBuilder.Entity<PHIEU_NHAP>(entity =>
             {
-                entity.HasKey(e => e.MaPn);
+                entity.HasKey(e => e.MA_PN);
 
-                entity.ToTable("PHIEU_NHAP");
-
-                entity.Property(e => e.MaPn)
-                    .HasColumnName("MA_PN")
+                entity.Property(e => e.MA_PN)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.MaNv)
-                    .HasColumnName("MA_NV")
+                entity.Property(e => e.MA_NV)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NgayTao)
-                    .HasColumnName("NGAY_TAO")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
-                entity.HasOne(d => d.MaNvNavigation)
-                    .WithMany(p => p.PhieuNhap)
-                    .HasForeignKey(d => d.MaNv)
+                entity.HasOne(d => d.MA_NVNavigation)
+                    .WithMany(p => p.PHIEU_NHAP)
+                    .HasForeignKey(d => d.MA_NV)
                     .HasConstraintName("FK_PHIEU_NHAP_NHAN_VIEN");
             });
 
-            modelBuilder.Entity<PhieuTra>(entity =>
+            modelBuilder.Entity<PHIEU_TRA>(entity =>
             {
-                entity.HasKey(e => e.MaPt);
+                entity.HasKey(e => e.MA_PT);
 
-                entity.ToTable("PHIEU_TRA");
-
-                entity.Property(e => e.MaPt)
-                    .HasColumnName("MA_PT")
+                entity.Property(e => e.MA_PT)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.MaHd)
+                entity.Property(e => e.MA_HD)
                     .IsRequired()
-                    .HasColumnName("MA_HD")
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MaNv)
-                    .HasColumnName("MA_NV")
+                entity.Property(e => e.MA_NV)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NgayTao)
-                    .HasColumnName("NGAY_TAO")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
-                entity.HasOne(d => d.MaHdNavigation)
-                    .WithMany(p => p.PhieuTra)
-                    .HasForeignKey(d => d.MaHd)
+                entity.HasOne(d => d.MA_HDNavigation)
+                    .WithMany(p => p.PHIEU_TRA)
+                    .HasForeignKey(d => d.MA_HD)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PHIEU_TRA_HOA_DON");
 
-                entity.HasOne(d => d.MaNvNavigation)
-                    .WithMany(p => p.PhieuTra)
-                    .HasForeignKey(d => d.MaNv)
+                entity.HasOne(d => d.MA_NVNavigation)
+                    .WithMany(p => p.PHIEU_TRA)
+                    .HasForeignKey(d => d.MA_NV)
                     .HasConstraintName("FK_PHIEU_TRA_NHAN_VIEN");
             });
 
-            modelBuilder.Entity<Quyen>(entity =>
+            modelBuilder.Entity<QUYEN>(entity =>
             {
-                entity.HasKey(e => e.MaQuyen);
+                entity.HasKey(e => e.MA_QUYEN);
 
-                entity.ToTable("QUYEN");
-
-                entity.Property(e => e.MaQuyen)
-                    .HasColumnName("MA_QUYEN")
+                entity.Property(e => e.MA_QUYEN)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.TenQuyen)
-                    .HasColumnName("TEN_QUYEN")
-                    .HasMaxLength(50);
+                entity.Property(e => e.TEN_QUYEN).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<SanPham>(entity =>
+            modelBuilder.Entity<SAN_PHAM>(entity =>
             {
-                entity.HasKey(e => e.MaSp);
+                entity.HasKey(e => e.MA_SP);
 
-                entity.ToTable("SAN_PHAM");
-
-                entity.Property(e => e.MaSp)
-                    .HasColumnName("MA_SP")
+                entity.Property(e => e.MA_SP)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.HinhAnh)
-                    .HasColumnName("HINH_ANH")
+                entity.Property(e => e.HINH_ANH)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LuotXem).HasColumnName("LUOT_XEM");
-
-                entity.Property(e => e.MaTl)
-                    .HasColumnName("MA_TL")
+                entity.Property(e => e.MA_TL)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NgayTao)
-                    .HasColumnName("NGAY_TAO")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
-                entity.Property(e => e.TenSp)
-                    .HasColumnName("TEN_SP")
-                    .HasMaxLength(150);
+                entity.Property(e => e.TEN_SP).HasMaxLength(150);
 
-                entity.HasOne(d => d.MaTlNavigation)
-                    .WithMany(p => p.SanPham)
-                    .HasForeignKey(d => d.MaTl)
+                entity.HasOne(d => d.MA_TLNavigation)
+                    .WithMany(p => p.SAN_PHAM)
+                    .HasForeignKey(d => d.MA_TL)
                     .HasConstraintName("FK_SAN_PHAM_THE_LOAI");
             });
 
-            modelBuilder.Entity<TaiKhoan>(entity =>
+            modelBuilder.Entity<TAI_KHOAN>(entity =>
             {
-                entity.HasKey(e => e.MaTk);
+                entity.HasKey(e => e.MA_TK);
 
-                entity.ToTable("TAI_KHOAN");
-
-                entity.Property(e => e.MaTk)
-                    .HasColumnName("MA_TK")
+                entity.Property(e => e.MA_TK)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.MaQuyen)
-                    .IsRequired()
-                    .HasColumnName("MA_QUYEN")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.MatKhau)
-                    .HasColumnName("MAT_KHAU")
+                entity.Property(e => e.MAT_KHAU)
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.MaQuyenNavigation)
-                    .WithMany(p => p.TaiKhoan)
-                    .HasForeignKey(d => d.MaQuyen)
+                entity.Property(e => e.MA_QUYEN)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.MA_QUYENNavigation)
+                    .WithMany(p => p.TAI_KHOAN)
+                    .HasForeignKey(d => d.MA_QUYEN)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TAI_KHOAN_QUYEN");
             });
 
-            modelBuilder.Entity<TheLoai>(entity =>
+            modelBuilder.Entity<THE_LOAI>(entity =>
             {
-                entity.HasKey(e => e.MaTl);
+                entity.HasKey(e => e.MA_TL);
 
-                entity.ToTable("THE_LOAI");
-
-                entity.Property(e => e.MaTl)
-                    .HasColumnName("MA_TL")
+                entity.Property(e => e.MA_TL)
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.CapTl).HasColumnName("CAP_TL");
-
-                entity.Property(e => e.MaTlCha)
-                    .HasColumnName("MA_TL_CHA")
+                entity.Property(e => e.MA_TL_CHA)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TenTl)
-                    .HasColumnName("TEN_TL")
-                    .HasMaxLength(50);
+                entity.Property(e => e.TEN_TL).HasMaxLength(50);
             });
         }
     }

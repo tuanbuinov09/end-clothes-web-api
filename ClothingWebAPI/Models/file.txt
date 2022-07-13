@@ -7,6 +7,6 @@ namespace ClothingWebAPI.Models
 {
     public class file
     {
-        Scaffold-DbContext "Server=.;Database=CLOTHING_STORE;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+        Scaffold-DbContext -UseDatabaseNames "Server=.;Database=CLOTHING_STORE;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
     }
 }
