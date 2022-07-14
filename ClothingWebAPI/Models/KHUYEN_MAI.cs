@@ -12,7 +12,7 @@ namespace ClothingWebAPI.Models
 
         public string MA_KM { get; set; }
         public string MA_NV { get; set; }
-        public DateTime? NGAY_AP_DUNG { get; set; }
+        public DateTime NGAY_AP_DUNG { get; set; }
         public int? THOI_GIAN { get; set; }
         public string MO_TA { get; set; }
 
