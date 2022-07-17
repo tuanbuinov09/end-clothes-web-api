@@ -35,6 +35,7 @@ namespace ClothingWebAPI.Models
         public virtual DbSet<QUYEN> QUYEN { get; set; }
         public virtual DbSet<SAN_PHAM> SAN_PHAM { get; set; }
         public virtual DbSet<TAI_KHOAN> TAI_KHOAN { get; set; }
+        public virtual DbSet<THAY_DOI_GIA> THAY_DOI_GIA { get; set; }
         public virtual DbSet<THE_LOAI> THE_LOAI { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -89,10 +90,6 @@ namespace ClothingWebAPI.Models
             {
                 entity.HasKey(e => new { e.ID_GH, e.MA_CT_SP });
 
-                entity.Property(e => e.MA_CT_SP)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.ID_GHNavigation)
                     .WithMany(p => p.CHI_TIET_GIO_HANG)
                     .HasForeignKey(d => d.ID_GH)
@@ -139,10 +136,6 @@ namespace ClothingWebAPI.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MA_CT_SP)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.MA_CT_SPNavigation)
                     .WithMany(p => p.CHI_TIET_PHIEU_NHAP)
                     .HasForeignKey(d => d.MA_CT_SP)
@@ -164,10 +157,6 @@ namespace ClothingWebAPI.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MA_CT_SP)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.MA_CT_SPNavigation)
                     .WithMany(p => p.CHI_TIET_PHIEU_TRA)
                     .HasForeignKey(d => d.MA_CT_SP)
@@ -185,10 +174,9 @@ namespace ClothingWebAPI.Models
             {
                 entity.HasKey(e => e.MA_CT_SP);
 
-                entity.Property(e => e.MA_CT_SP)
-                    .HasMaxLength(15)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                entity.HasIndex(e => new { e.MA_SP, e.MA_SIZE })
+                    .HasName("UK_CHI_TIET_SAN_PHAM")
+                    .IsUnique();
 
                 entity.Property(e => e.MA_SIZE)
                     .IsRequired()
@@ -542,6 +530,17 @@ namespace ClothingWebAPI.Models
                     .HasForeignKey(d => d.MA_QUYEN)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TAI_KHOAN_QUYEN");
+            });
+
+            modelBuilder.Entity<THAY_DOI_GIA>(entity =>
+            {
+                entity.HasKey(e => new { e.MA_NV, e.MA_CT_SP, e.NGAY_THAY_DOI });
+
+                entity.Property(e => e.MA_NV)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NGAY_THAY_DOI).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<THE_LOAI>(entity =>

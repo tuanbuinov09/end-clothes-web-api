@@ -12,7 +12,7 @@ namespace ClothingWebAPI.Models
             CHI_TIET_PHIEU_TRA = new HashSet<CHI_TIET_PHIEU_TRA>();
         }
 
-        public string MA_CT_SP { get; set; }
+        public int MA_CT_SP { get; set; }
         public string MA_SP { get; set; }
         public string MA_SIZE { get; set; }
         public int? GIA { get; set; }

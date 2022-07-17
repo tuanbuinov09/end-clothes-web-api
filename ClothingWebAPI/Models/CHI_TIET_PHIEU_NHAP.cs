@@ -6,7 +6,7 @@ namespace ClothingWebAPI.Models
     public partial class CHI_TIET_PHIEU_NHAP
     {
         public string MA_PN { get; set; }
-        public string MA_CT_SP { get; set; }
+        public int MA_CT_SP { get; set; }
         public int? SO_LUONG { get; set; }
         public int? GIA { get; set; }
 
