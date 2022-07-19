@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace ClothingWebAPI.Entities
 {
@@ -184,6 +185,74 @@ namespace ClothingWebAPI.Entities
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listSanPham;
+        }
+        [HttpGet]
+        [Route("")]
+        public IList<SAN_PHAM_ENTITY> GetOneSanPham([FromQuery(Name = "productId")] string productId)
+        {
+            var listSanPham = new List<SAN_PHAM_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_MOT_SP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@productId", SqlDbType.VarChar).Value = productId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+                using (SqlCommand cmd = new SqlCommand("LAY_CT_SP_CUA_SP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@productId", SqlDbType.VarChar).Value = productId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        try
+                        {
+                            listSanPham[0].chiTietSanPham = HelperFunction.DataReaderMapToList<CHI_TIET_SAN_PHAM_ENTITY>(reader).ToList();
+
+                        }catch(Exception ex)
+                        {
+                            Debug.Write("catch truowngf hop ma k ton tai nen k the tim ctsp");
+                        }
 
                         // instead of this traditional way
                         // while (reader.Read())
