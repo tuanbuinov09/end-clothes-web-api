@@ -35,5 +35,30 @@ namespace ClothingWebAPI.Entities
             }
             return list;
         }
+
+        public static T DataReaderMapToRespone<T>(DbDataReader dr)
+        {
+            while (dr.Read())
+            {
+                var obj = Activator.CreateInstance<T>();
+                foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                {
+                    try
+                    {
+                        if (!Equals(dr[prop.Name], DBNull.Value))
+                        {
+                            prop.SetValue(obj, dr[prop.Name], null);
+                        }
+                    }
+                    catch (Exception ex) //bắt lỗi không có cột trong entity trong khi store trả về có
+                    {
+                        Debug.Write("////--- lỗi mapping, catched exception, map tiếp cột khác");
+                    }
+
+                }
+                return obj;
+            }
+            return default(T);
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace ClothingWebAPI.Entities
         public int? LUOT_XEM { get; set; }
         public DateTime NGAY_TAO { get; set; }
         public string HINH_ANH { get; set; }
+        public string MO_TA { get; set; }
         public string TEN_TL { get; set; }
         public string GIA_STR { get; set; }
         public int PHAN_TRAM_GIAM { get; set; }
