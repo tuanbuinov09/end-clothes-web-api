@@ -497,6 +497,8 @@ namespace ClothingWebAPI.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MO_TA).HasMaxLength(200);
+
                 entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
                 entity.Property(e => e.TEN_SP).HasMaxLength(150);
