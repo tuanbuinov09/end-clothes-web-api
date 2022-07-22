@@ -14,10 +14,12 @@ namespace ClothingWebAPI.Entities
         public string TEN_SP { get; set; }
         public string MA_TL { get; set; }
         public int? LUOT_XEM { get; set; }
+        public int? TONG_SL_TON { get; set; }
         public DateTime NGAY_TAO { get; set; }
         public string HINH_ANH { get; set; }
         public string MO_TA { get; set; }
         public string TEN_TL { get; set; }
+        public string SIZE_STR { get; set; }
         public string GIA_STR { get; set; }
         public int PHAN_TRAM_GIAM { get; set; }
         public string GIA_STR_DA_GIAM { get; set; }
