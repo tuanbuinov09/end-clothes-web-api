@@ -7,11 +7,17 @@ namespace ClothingWebAPI.Entities
 {
     public class RESPONSE_ENTITY
     {
+        public RESPONSE_ENTITY(string errorDesc, string responseMessage)
+        {
+            this.errorDesc = errorDesc;
+            this.responseMessage = responseMessage;
+        }
         public RESPONSE_ENTITY()
         {
+            
         }
 
-        string errorDesc { get; set; }
-        string responseMessage { get; set; }
+        public string errorDesc { get; set; }
+        public string responseMessage { get; set; }
     }
 }

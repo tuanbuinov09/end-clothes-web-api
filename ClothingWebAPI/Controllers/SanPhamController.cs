@@ -200,6 +200,95 @@ namespace ClothingWebAPI.Entities
             }
             return listSanPham;
         }
+
+        [HttpGet]
+        [Route("search")]
+        public IList<SAN_PHAM_ENTITY> SearchSanPham([FromQuery(Name = "top")] string top, [FromQuery(Name = "keyword")] string keyword)
+        {
+            var listSanPham = new List<SAN_PHAM_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("TIM_SP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    if (top != null && top != "")
+                    {
+                        cmd.Parameters.Add("@top", SqlDbType.Int).Value = top; // có thể null
+                    }
+                    if (keyword != null && keyword != "")
+                    {
+                        cmd.Parameters.Add("@keyword", SqlDbType.VarChar).Value = keyword; // có thể null
+                    }
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listSanPham;
+        }
+
+        [HttpPost]
+        [Route("search2")]
+        public async Task<IList<SAN_PHAM_ENTITY>> PostSearchKeyword(SearchInputEntity searchInputEntity)
+        {
+            var listSanPham = new List<SAN_PHAM_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("TIM_SP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //if (searchInputEntity.top != null && searchInputEntity.top != 0)
+                    //{
+                    //    cmd.Parameters.Add("@top", SqlDbType.Int).Value = searchInputEntity.top; // có thể null
+                    //}
+                    if (searchInputEntity.keyword != null && searchInputEntity.keyword != "")
+                    {
+                        cmd.Parameters.Add("@keyword", SqlDbType.NVarChar).Value = searchInputEntity.keyword; // có thể null
+                    }
+                    Debug.WriteLine(searchInputEntity.keyword);
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listSanPham;
+        }
+
         [HttpGet]
         [Route("")]
         public IList<SAN_PHAM_ENTITY> GetOneSanPham([FromQuery(Name = "productId")] string productId)
