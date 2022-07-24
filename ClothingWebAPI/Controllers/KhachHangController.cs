@@ -75,6 +75,104 @@ namespace ClothingWebAPI.Controllers
             //userWithToken.AccessToken = GenerateAccessToken(user.UserId);
             return userWithToken;
         }
+        [HttpPost]
+        [Route("add-cart")]
+        public async Task<ActionResult<string>> TaoGioHang(GIO_HANG_ENTITY gioHang)
+        {
+            var returnstr = "";
+            var idGioHang = -1;
+            var khachHangReturnFromSP = new KHACH_HANG_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+  
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("THEM_GIO_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = gioHang.MA_KH;
+                    cmd.Parameters.Add("@HO_TEN", SqlDbType.NVarChar).Value = gioHang.HO_TEN;
+                    cmd.Parameters.Add("@SDT", SqlDbType.VarChar).Value = gioHang.SDT;
+                    cmd.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = gioHang.EMAIL;
+                    cmd.Parameters.Add("@DIA_CHI", SqlDbType.NVarChar).Value = gioHang.DIA_CHI;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        //// Map data to Order class using this way
+                        //khachHangReturnFromSP = HelperFunction.DataReaderMapToEntity<KHACH_HANG_ENTITY>(reader);
+                        
+                            if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                idGioHang = (int) reader["ID_GIO_HANG"];
+                            }
+                        }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+
+            foreach(var b in gioHang.chiTietGioHang)
+            {
+                using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+                {
+
+                    // Use count to get all available items before the connection closes
+                    using (SqlCommand cmd = new SqlCommand("THEM_VAO_CHI_TIET_GIO_HANG", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@ID_GIO_HANG", SqlDbType.Int).Value = idGioHang;
+                        cmd.Parameters.Add("@MA_CT_SP", SqlDbType.Int).Value = b.MA_CT_SP;
+                        cmd.Parameters.Add("@SO_LUONG", SqlDbType.Int).Value = b.SO_LUONG;
+                        cmd.Parameters.Add("@GIA", SqlDbType.Int).Value = b.GIA;
+                        cmd.Connection.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            //// Map data to Order class using this way
+                            //khachHangReturnFromSP = HelperFunction.DataReaderMapToEntity<KHACH_HANG_ENTITY>(reader);
+
+                            //if (reader.HasRows)
+                            //{
+                            //    while (reader.Read())
+                            //    {
+                            //        idGioHang = (int)reader["ID_GIO_HANG"];
+                            //    }
+                            //}
+                        }
+                        cmd.Connection.Close();
+                    }
+                }
+
+            }
+            returnstr = "Đặt hàng thành công";
+
+            return returnstr;
+            //KHACH_HANG_w_TOKEN userWithToken = null;
+
+            //if (khachHangReturnFromSP != null)
+            //{
+            //    //RefreshToken refreshToken = GenerateRefreshToken();
+            //    //user.RefreshTokens.Add(refreshToken);
+            //    //await _context.SaveChangesAsync();
+
+            //    userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
+            //    //userWithToken.RefreshToken = refreshToken.Token;
+            //}
+
+            //if (userWithToken == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //sign your token here here..
+            //userWithToken.AccessToken = GenerateAccessToken(user.UserId);
+            //return userWithToken;
+        }
     }
 }
