@@ -14,7 +14,7 @@ using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace ClothingWebAPI.Entities
+namespace ClothingWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

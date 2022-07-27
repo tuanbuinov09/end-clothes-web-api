@@ -36,7 +36,7 @@ namespace ClothingWebAPI.Entities
             return list;
         }
 
-        public static T DataReaderMapToRespone<T>(DbDataReader dr)
+        public static T DataReaderMapToEntity<T>(DbDataReader dr)
         {
             while (dr.Read())
             {
