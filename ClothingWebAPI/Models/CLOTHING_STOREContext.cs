@@ -37,6 +37,7 @@ namespace ClothingWebAPI.Models
         public virtual DbSet<TAI_KHOAN> TAI_KHOAN { get; set; }
         public virtual DbSet<THAY_DOI_GIA> THAY_DOI_GIA { get; set; }
         public virtual DbSet<THE_LOAI> THE_LOAI { get; set; }
+        public virtual DbSet<TI_GIA> TI_GIA { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -320,7 +321,7 @@ namespace ClothingWebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.SDT)
-                    .HasMaxLength(10)
+                    .HasMaxLength(15)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.MA_TKNavigation)
@@ -497,7 +498,7 @@ namespace ClothingWebAPI.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MO_TA).HasMaxLength(200);
+                entity.Property(e => e.MO_TA).HasMaxLength(500);
 
                 entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
 
@@ -543,6 +544,18 @@ namespace ClothingWebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NGAY_THAY_DOI).HasColumnType("datetime");
+
+                entity.HasOne(d => d.MA_CT_SPNavigation)
+                    .WithMany(p => p.THAY_DOI_GIA)
+                    .HasForeignKey(d => d.MA_CT_SP)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_THAY_DOI_GIA_CHI_TIET_SAN_PHAM");
+
+                entity.HasOne(d => d.MA_NVNavigation)
+                    .WithMany(p => p.THAY_DOI_GIA)
+                    .HasForeignKey(d => d.MA_NV)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_THAY_DOI_GIA_NHAN_VIEN");
             });
 
             modelBuilder.Entity<THE_LOAI>(entity =>
@@ -559,6 +572,25 @@ namespace ClothingWebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TEN_TL).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TI_GIA>(entity =>
+            {
+                entity.HasKey(e => new { e.MA_NV, e.NGAY_AP_DUNG });
+
+                entity.Property(e => e.MA_NV)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NGAY_AP_DUNG).HasColumnType("datetime");
+
+                entity.Property(e => e.TI_GIA1).HasColumnName("TI_GIA");
+
+                entity.HasOne(d => d.MA_NVNavigation)
+                    .WithMany(p => p.TI_GIA)
+                    .HasForeignKey(d => d.MA_NV)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TI_GIA_NHAN_VIEN");
             });
         }
     }
