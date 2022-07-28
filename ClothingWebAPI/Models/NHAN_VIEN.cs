@@ -12,6 +12,8 @@ namespace ClothingWebAPI.Models
             KHUYEN_MAI = new HashSet<KHUYEN_MAI>();
             PHIEU_NHAP = new HashSet<PHIEU_NHAP>();
             PHIEU_TRA = new HashSet<PHIEU_TRA>();
+            THAY_DOI_GIA = new HashSet<THAY_DOI_GIA>();
+            TI_GIA = new HashSet<TI_GIA>();
         }
 
         public string MA_NV { get; set; }
@@ -28,5 +30,7 @@ namespace ClothingWebAPI.Models
         public ICollection<KHUYEN_MAI> KHUYEN_MAI { get; set; }
         public ICollection<PHIEU_NHAP> PHIEU_NHAP { get; set; }
         public ICollection<PHIEU_TRA> PHIEU_TRA { get; set; }
+        public ICollection<THAY_DOI_GIA> THAY_DOI_GIA { get; set; }
+        public ICollection<TI_GIA> TI_GIA { get; set; }
     }
 }
