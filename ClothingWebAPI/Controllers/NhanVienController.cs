@@ -57,6 +57,34 @@ namespace ClothingWebAPI.Controllers
         
             return nhanVienReturnFromSP;
         }
-        
+
+
+        // GET: api/NhanVien/delivering
+        [HttpGet]
+        [Route("delivering")]
+        public async Task<IList<NHAN_VIEN_ENTITY>> GetEmployeeAndNumberOfOrderDelivering()
+        {
+            var nhanVienReturnFromSP = new List<NHAN_VIEN_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_NHAN_VIEN_VA_SO_DON_DANG_GIAO", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        nhanVienReturnFromSP = HelperFunction.DataReaderMapToList<NHAN_VIEN_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return nhanVienReturnFromSP;
+        }
     }
 }
