@@ -174,5 +174,71 @@ namespace ClothingWebAPI.Controllers
             //userWithToken.AccessToken = GenerateAccessToken(user.UserId);
             //return userWithToken;
         }
+
+        [HttpGet]
+        [Route("carts")]
+        public async Task<IList<GIO_HANG_ENTITY>> GetAllGioHang([FromQuery(Name = "filterState")] int filterState, [FromQuery(Name = "customerId")] string customerId)
+        {
+            var listGioHang = new List<GIO_HANG_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_GIO_HANG_CUA_KH", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@TRANG_THAI", SqlDbType.Int).Value = filterState;//có thể null
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;//có thể null
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listGioHang = HelperFunction.DataReaderMapToList<GIO_HANG_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listGioHang;
+        }
+
+        [HttpPut]
+        [Route("cancel-cart")]
+        public async Task<ActionResult<RESPONSE_ENTITY>> CancelCart(DUYET_GIAO_GH_ENTITY duyetGiao)
+        {
+            var response = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("HUY_GH", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@ID_GH", SqlDbType.Int).Value = duyetGiao.ID_GH;
+                    
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return response;
+        }
     }
 }
