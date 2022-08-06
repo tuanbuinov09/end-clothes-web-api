@@ -86,5 +86,60 @@ namespace ClothingWebAPI.Controllers
 
             return nhanVienReturnFromSP;
         }
+
+
+        // GET: api/NhanVien/dashboardchart
+        [HttpGet]
+        [Route("dashboardchart")]
+        public async Task<IList<COL_CHART_DATA_ENTITY>> GetDataDashBoardChart([FromQuery(Name = "n")] int n)
+        {
+            var data = new List<COL_CHART_DATA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("BAO_CAO_DOANH_THU_N_NGAY_GAN_NHAT", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@N", SqlDbType.VarChar).Value = n;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToList<COL_CHART_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return data;
+        }
+
+        [HttpGet]
+        [Route("statistic")]
+        public async Task<STATISTIC_DATA_ENTITY> GetStatistic()
+        {
+            var data = new STATISTIC_DATA_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_THONG_TIN_THONG_KE_TONG_QUAN", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToEntity<STATISTIC_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return data;
+        }
     }
 }
