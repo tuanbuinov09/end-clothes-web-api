@@ -7,6 +7,7 @@ namespace ClothingWebAPI.Entities
 {
     public class CHI_TIET_GIO_HANG_ENTITY
     {
+        public int STT { get; set; }
         public int ID_GH { get; set; }
         public int MA_CT_SP { get; set; }
         public string MA_SP { get; set; }
