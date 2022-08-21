@@ -96,6 +96,7 @@ namespace ClothingWebAPI.Controllers
                     cmd.Parameters.Add("@SDT", SqlDbType.VarChar).Value = gioHang.SDT;
                     cmd.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = gioHang.EMAIL;
                     cmd.Parameters.Add("@DIA_CHI", SqlDbType.NVarChar).Value = gioHang.DIA_CHI;
+                    //cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = gioHang.GHI_CHU;
                     cmd.Connection.Open();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())

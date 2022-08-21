@@ -162,6 +162,47 @@ namespace ClothingWebAPI.Controllers
             return listSanPham;
         }
         [HttpGet]
+        [Route("best-seller")]
+        public IList<SAN_PHAM_ENTITY> GetSanPhamBanChayTrongNThangGanNhat([FromQuery(Name = "top")] string top, [FromQuery(Name = "month")] string month)
+        {
+            var listSanPham = new List<SAN_PHAM_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_SP_BAN_CHAY_TRONG_N_THANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (top != null && top != "")
+                    {
+                        cmd.Parameters.Add("@top", SqlDbType.Int).Value = top; // có thể null
+                    }
+                    if (month != null && month != "")
+                    {
+                        cmd.Parameters.Add("@n", SqlDbType.Int).Value = month; // có thể null
+                    }
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listSanPham;
+        }
+        [HttpGet]
         [Route("sale-off")]
         public IList<SAN_PHAM_ENTITY> GetSanPhamDangKhuyenMai([FromQuery(Name = "top")] string top)
         {
