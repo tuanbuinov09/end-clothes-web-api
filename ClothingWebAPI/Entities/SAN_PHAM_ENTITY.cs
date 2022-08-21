@@ -23,6 +23,7 @@ namespace ClothingWebAPI.Entities
         public string GIA_STR { get; set; }
         public int PHAN_TRAM_GIAM { get; set; }
         public string GIA_STR_DA_GIAM { get; set; }
+        public int TONG_SL_DA_BAN { get; set; }
         public List<CHI_TIET_SAN_PHAM_ENTITY> chiTietSanPham { get; set; }
     }
 }
