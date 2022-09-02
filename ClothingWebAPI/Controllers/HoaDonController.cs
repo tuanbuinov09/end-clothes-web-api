@@ -68,6 +68,7 @@ namespace ClothingWebAPI.Controllers
 
                     cmd.Parameters.Add("@ID_GH", SqlDbType.Int).Value = hoaDon.ID_GH;
                     cmd.Parameters.Add("@MA_HD", SqlDbType.VarChar).Value = hoaDon.MA_HD;
+                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = hoaDon.MA_NV;
                     cmd.Connection.Open();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())

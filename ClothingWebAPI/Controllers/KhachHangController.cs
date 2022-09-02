@@ -76,6 +76,100 @@ namespace ClothingWebAPI.Controllers
             return userWithToken;
         }
         [HttpPost]
+        [Route("sign-up")]
+        public async Task<ActionResult<KHACH_HANG_w_TOKEN>> SignUp(KHACH_HANG_ENTITY khachHang)
+        {
+            var khachHangReturnFromSP = new KHACH_HANG_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("KHACH_HANG_SIGN_UP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = khachHang.EMAIL;
+                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = khachHang.MAT_KHAU;
+                    cmd.Parameters.Add("@diaChi", SqlDbType.NVarChar).Value = khachHang.DIA_CHI;
+                    cmd.Parameters.Add("@soDienThoai", SqlDbType.VarChar).Value = khachHang.SDT;
+                    cmd.Parameters.Add("@hoTen", SqlDbType.NVarChar).Value = khachHang.HO_TEN;
+                    cmd.Parameters.Add("@maKhachHang", SqlDbType.VarChar).Value = khachHang.MA_KH;
+                    cmd.Parameters.Add("@maTaiKhoan", SqlDbType.VarChar).Value = khachHang.MA_TK;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        khachHangReturnFromSP = HelperFunction.DataReaderMapToEntity<KHACH_HANG_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            KHACH_HANG_w_TOKEN userWithToken = null;
+
+            if (khachHangReturnFromSP != null)
+            {
+                //RefreshToken refreshToken = GenerateRefreshToken();
+                //user.RefreshTokens.Add(refreshToken);
+                //await _context.SaveChangesAsync();
+
+                userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
+                //userWithToken.RefreshToken = refreshToken.Token;
+            }
+
+            if (userWithToken == null)
+            {
+                return NotFound();
+            }
+
+            //sign your token here here..
+            //userWithToken.AccessToken = GenerateAccessToken(user.UserId);
+            return userWithToken;
+        }
+        [HttpPost]
+        [Route("validate-sign-up")]
+        public async Task<ActionResult<KHACH_HANG_w_TOKEN>> ValidateSignUp(KHACH_HANG_ENTITY khachHang)
+        {
+            var khachHangReturnFromSP = new KHACH_HANG_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("KIEM_TRA_KHACH_HANG_SIGN_UP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = khachHang.EMAIL;
+                    cmd.Parameters.Add("@phone", SqlDbType.VarChar).Value = khachHang.SDT;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        khachHangReturnFromSP = HelperFunction.DataReaderMapToEntity<KHACH_HANG_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            KHACH_HANG_w_TOKEN userWithToken = null;
+
+            if (khachHangReturnFromSP != null)
+            {
+                userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
+            }
+
+            if (userWithToken == null)
+            {
+                return NotFound();
+            }
+
+            return userWithToken;
+        }
+        [HttpPost]
         [Route("add-cart")]
         public async Task<ActionResult<string>> TaoGioHang(GIO_HANG_ENTITY gioHang)
         {
@@ -96,7 +190,14 @@ namespace ClothingWebAPI.Controllers
                     cmd.Parameters.Add("@SDT", SqlDbType.VarChar).Value = gioHang.SDT;
                     cmd.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = gioHang.EMAIL;
                     cmd.Parameters.Add("@DIA_CHI", SqlDbType.NVarChar).Value = gioHang.DIA_CHI;
-                    //cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = gioHang.GHI_CHU;
+                    if (gioHang.GHI_CHU != null)
+                    {
+                        cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = gioHang.GHI_CHU;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = "";
+                    }
                     cmd.Connection.Open();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
