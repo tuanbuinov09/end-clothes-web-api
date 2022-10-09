@@ -395,6 +395,38 @@ namespace ClothingWebAPI.Controllers
                     }
                     cmd.Connection.Close();
                 }
+
+                using (SqlCommand cmd = new SqlCommand("LAY_HINH_ANH_CUA_SP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@productId", SqlDbType.VarChar).Value = productId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        try
+                        {
+                            listSanPham[0].hinhAnhSanPham = HelperFunction.DataReaderMapToList<HINH_ANH_SAN_PHAM_ENTITY>(reader).ToList();
+
+                        }catch(Exception ex)
+                        {
+                            Debug.Write("catch truowngf hop ma k ton tai nen k the tim ctsp");
+                        }
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
             }
             return listSanPham;
         }
