@@ -13,6 +13,10 @@ namespace ClothingWebAPI.Entities
         public int MA_CT_SP { get; set; }
         public string MA_SP { get; set; }
         public string MA_SIZE { get; set; }
+        public string MA_MAU { get; set; }
+        public string TEN_MAU { get; set; } 
+        public string TEN_TIENG_ANH { get; set; }
+        public string HINH_ANH { get; set; }
         public string TEN_SIZE { get; set; }
         public int? GIA { get; set; }
         public int SO_LUONG { get; set; }
