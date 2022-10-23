@@ -306,6 +306,8 @@ namespace ClothingWebAPI.Controllers
                     if (searchInputEntity.keyword != null && searchInputEntity.keyword != "")
                     {
                         cmd.Parameters.Add("@keyword", SqlDbType.NVarChar).Value = searchInputEntity.keyword; // có thể null
+                        cmd.Parameters.Add("@priceFrom", SqlDbType.Int).Value = searchInputEntity.priceFrom; // có thể null
+                        cmd.Parameters.Add("@priceTo", SqlDbType.Int).Value = searchInputEntity.priceTo; // có thể null
                     }
                     Debug.WriteLine(searchInputEntity.keyword);
                     cmd.Connection.Open();
