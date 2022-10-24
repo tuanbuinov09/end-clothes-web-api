@@ -9,6 +9,7 @@ namespace ClothingWebAPI.Models
         {
             GIO_HANGMA_NV_DUYETNavigation = new HashSet<GIO_HANG>();
             GIO_HANGMA_NV_GIAONavigation = new HashSet<GIO_HANG>();
+            HOA_DON = new HashSet<HOA_DON>();
             KHUYEN_MAI = new HashSet<KHUYEN_MAI>();
             PHIEU_NHAP = new HashSet<PHIEU_NHAP>();
             PHIEU_TRA = new HashSet<PHIEU_TRA>();
@@ -27,6 +28,7 @@ namespace ClothingWebAPI.Models
         public TAI_KHOAN MA_TKNavigation { get; set; }
         public ICollection<GIO_HANG> GIO_HANGMA_NV_DUYETNavigation { get; set; }
         public ICollection<GIO_HANG> GIO_HANGMA_NV_GIAONavigation { get; set; }
+        public ICollection<HOA_DON> HOA_DON { get; set; }
         public ICollection<KHUYEN_MAI> KHUYEN_MAI { get; set; }
         public ICollection<PHIEU_NHAP> PHIEU_NHAP { get; set; }
         public ICollection<PHIEU_TRA> PHIEU_TRA { get; set; }

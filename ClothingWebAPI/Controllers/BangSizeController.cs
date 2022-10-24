@@ -53,7 +53,7 @@ namespace ClothingWebAPI.Controllers
         {
             using (var db = new CLOTHING_STOREContext())
             {
-                var listBangSize = db.BANG_SIZE.Include(bangSize => bangSize.CHI_TIET_SAN_PHAM).OrderBy(bangSize => bangSize.TEN_SIZE).ToList();
+                var listBangSize = db.BANG_SIZE.Include(bangSize => bangSize.CHI_TIET_SAN_PHAM).OrderBy(bangSize => bangSize.MA_SIZE).ToList();
                 return listBangSize;
 
             }

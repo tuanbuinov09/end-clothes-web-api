@@ -16,7 +16,9 @@ namespace ClothingWebAPI.Models
         public string SDT { get; set; }
         public string EMAIL { get; set; }
         public DateTime? NGAY_TAO { get; set; }
+        public DateTime? NGAY_GIAO { get; set; }
         public string DIA_CHI { get; set; }
+        public string GHI_CHU { get; set; }
         public short? TRANG_THAI { get; set; }
         public string MA_NV_DUYET { get; set; }
         public string MA_NV_GIAO { get; set; }

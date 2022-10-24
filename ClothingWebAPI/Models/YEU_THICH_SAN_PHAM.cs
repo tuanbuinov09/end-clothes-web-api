@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
-    public partial class CHI_TIET_KHUYEN_MAI
+    public partial class YEU_THICH_SAN_PHAM
     {
-        public string MA_KM { get; set; }
+        public string MA_KH { get; set; }
         public string MA_SP { get; set; }
-        public short PHAN_TRAM_GIAM { get; set; }
+        public DateTime NGAY_THEM { get; set; }
 
-        public KHUYEN_MAI MA_KMNavigation { get; set; }
+        public KHACH_HANG MA_KHNavigation { get; set; }
         public SAN_PHAM MA_SPNavigation { get; set; }
     }
 }
