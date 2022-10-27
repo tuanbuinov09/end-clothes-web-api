@@ -15,9 +15,11 @@ namespace ClothingWebAPI.Models
 
         public int MA_CT_SP { get; set; }
         public string MA_SP { get; set; }
+        public string MA_MAU { get; set; }
         public string MA_SIZE { get; set; }
-        public int? SL_TON { get; set; }
+        public int SL_TON { get; set; }
 
+        public BANG_MAU MA_MAUNavigation { get; set; }
         public BANG_SIZE MA_SIZENavigation { get; set; }
         public SAN_PHAM MA_SPNavigation { get; set; }
         public ICollection<CHI_TIET_GIO_HANG> CHI_TIET_GIO_HANG { get; set; }

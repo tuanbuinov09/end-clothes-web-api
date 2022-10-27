@@ -12,7 +12,7 @@ namespace ClothingWebAPI.Models
 
         public string MA_PT { get; set; }
         public string MA_HD { get; set; }
-        public DateTime? NGAY_TAO { get; set; }
+        public DateTime NGAY_TAO { get; set; }
         public string MA_NV { get; set; }
 
         public HOA_DON MA_HDNavigation { get; set; }

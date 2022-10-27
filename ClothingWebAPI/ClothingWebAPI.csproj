@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML.Report" Version="0.2.2" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="FluentAssertions" Version="3.1.229" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.27" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.2" />
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Handlers\" />
+    <Folder Include="Images\" />
   </ItemGroup>
 
 

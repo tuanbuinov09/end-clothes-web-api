@@ -16,6 +16,10 @@ using ClothingWebAPI.Entities;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ClothingWebAPI
 {
@@ -31,6 +35,19 @@ namespace ClothingWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // adding the MultiPartBodyLength Configuration
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = 10; //default 1024
+                options.ValueLengthLimit = int.MaxValue; //not recommended value
+                options.MultipartBodyLengthLimit = long.MaxValue; //not recommended value
+            });
+
+            var iisSection = Configuration.GetSection("IISServerOptions");
+            services.Configure<IISServerOptions>(iisSection);
+            // ends here
+
             //Enable CORS
             services.AddCors(c =>
             {
@@ -100,6 +117,14 @@ namespace ClothingWebAPI
             // Use cors
             app.UseCors(options => {
                 options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            });
+
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider
+              (Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
+                RequestPath = new PathString("/Images")
             });
 
             if (env.IsDevelopment())
