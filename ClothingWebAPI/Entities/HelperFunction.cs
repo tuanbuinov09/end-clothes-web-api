@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace ClothingWebAPI.Entities
 {
@@ -13,6 +16,16 @@ namespace ClothingWebAPI.Entities
         // hàm map entity với kết quả store trả về
         public static List<T> DataReaderMapToList<T>(DbDataReader dr)
         {
+            // Map data to Order class using this way
+            // instead of this traditional way
+            // while (reader.Read())
+            // {
+            // var o = new Order();
+            // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+            // o.CustomerID = reader["CustomerID"].ToString();
+            // orders.Add(o);
+            // }
+
             List<T> list = new List<T>();
             while (dr.Read())
             {
@@ -60,5 +73,20 @@ namespace ClothingWebAPI.Entities
             }
             return default(T);
         }
+
+
+        public static string ConvertObjectToXMLString(object classObject)
+        {
+            string xmlString = null;
+            XmlSerializer xmlSerializer = new XmlSerializer(classObject.GetType());
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                xmlSerializer.Serialize(memoryStream, classObject);
+                memoryStream.Position = 0;
+                xmlString = new StreamReader(memoryStream).ReadToEnd();
+            }
+            return xmlString;
+        }
+
     }
 }

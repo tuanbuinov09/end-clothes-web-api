@@ -13,7 +13,6 @@ using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
-
 namespace ClothingWebAPI.Controllers
 {
     [ApiController]
@@ -474,9 +473,13 @@ namespace ClothingWebAPI.Controllers
 
         [HttpPost]
         [Route("add")]
-        public IList<RESPONSE_ENTITY> InsertProduct([FromBody] SAN_PHAM_ENTITY body)
+        public RESPONSE_ENTITY InsertProduct([FromBody] SAN_PHAM_ENTITY body)
         {
+            // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
+            var listHinhAnhSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.hinhAnhSanPham);
+            var listChiTietSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.chiTietSanPham);
             var response = new List<RESPONSE_ENTITY>();
+
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
@@ -485,7 +488,14 @@ namespace ClothingWebAPI.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@TEN_SP", SqlDbType.VarChar).Value = body.TEN_SP;//có thể null
+                    cmd.Parameters.Add("@TEN_SP", SqlDbType.NVarChar).Value = body.TEN_SP;
+                    cmd.Parameters.Add("@MA_TL", SqlDbType.VarChar).Value = body.MA_TL;
+                    cmd.Parameters.Add("@HINH_ANH", SqlDbType.NVarChar).Value = body.HINH_ANH;
+                    cmd.Parameters.Add("@MO_TA", SqlDbType.NVarChar).Value = body.MO_TA;
+                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = body.MA_NV;
+
+                    cmd.Parameters.Add("@xml_LIST_HINH_ANH_SP_STR", SqlDbType.NVarChar).Value = listHinhAnhSanPham_Xml;
+                    cmd.Parameters.Add("@xml_LIST_CHI_TIET_SP_STR", SqlDbType.NVarChar).Value = listChiTietSanPham_Xml;
 
                     cmd.Connection.Open();
 
@@ -509,7 +519,35 @@ namespace ClothingWebAPI.Controllers
                 }
 
             }
-            return response;
+            return response[0];
+        }
+        [HttpDelete]
+        [Route("delete")]
+        public RESPONSE_ENTITY DeleteProduct([FromQuery(Name = "productId")] string productId)
+        {
+            var response = new List<RESPONSE_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("XOA_SAN_PHAM", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = productId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
         }
         //--- older
 

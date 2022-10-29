@@ -26,5 +26,7 @@ namespace ClothingWebAPI.Entities
         public int TONG_SL_DA_BAN { get; set; }
         public List<CHI_TIET_SAN_PHAM_ENTITY> chiTietSanPham { get; set; }
         public List<HINH_ANH_SAN_PHAM_ENTITY> hinhAnhSanPham { get; set; }
+
+        public string MA_NV { get; set; }
     }
 }
