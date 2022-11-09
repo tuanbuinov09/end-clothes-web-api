@@ -238,6 +238,9 @@ namespace ClothingWebAPI.Controllers
         }
     }
 
+
+
+
     //    [HttpGet]
     //    [Route("report-sale")]
     //    public IActionResult GEtE([FromQuery(Name = "from")] DateTime from, [FromQuery(Name = "to")] DateTime to)

@@ -26,6 +26,41 @@ namespace ClothingWebAPI.Controllers
             _jwtsettings = jwtsettings.Value;
         }
 
+        [HttpGet]
+        [Route("all-has-purchased")]
+        public async Task<IList<KHACH_HANG_ENTITY>> GetAllKhachHangTungMuaHang()
+        {
+            var listKhachHang = new List<KHACH_HANG_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_KHACH_HANG_TUNG_MUA_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+        
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listKhachHang = HelperFunction.DataReaderMapToList<KHACH_HANG_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listKhachHang;
+        }
+
         // POST: api/KhachHang
         [HttpPost]
         [Route("login")]
