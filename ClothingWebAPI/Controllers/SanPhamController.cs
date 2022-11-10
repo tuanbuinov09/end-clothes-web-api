@@ -586,6 +586,44 @@ namespace ClothingWebAPI.Controllers
             }
             return listCTSanPham;
         }
+
+        [HttpGet]
+        [Route("detail-for-price-change")]
+        public IList<THAY_DOI_GIA_ENTITY> GetChiTietSanPhamForPriceChange([FromQuery(Name = "productId")] string productId)
+        {
+            var listCTSanPham = new List<THAY_DOI_GIA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_DS_CHI_TIET_CUA_SP_KEM_GIA_HIEN_TAI", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@productId", SqlDbType.VarChar).Value = productId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listCTSanPham = HelperFunction.DataReaderMapToList<THAY_DOI_GIA_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return listCTSanPham;
+        }
     }
 
 }
