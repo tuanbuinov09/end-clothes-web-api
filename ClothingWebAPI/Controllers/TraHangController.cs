@@ -150,6 +150,7 @@ namespace ClothingWebAPI.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.Add("@ID_GH", SqlDbType.Int).Value = phieuTra.ID_GH;
                     cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = phieuTra.GHI_CHU;
                     cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = phieuTra.MA_NV;
                     cmd.Parameters.Add("@xml_LIST_CHI_TIET_PT_STR", SqlDbType.NVarChar).Value = listChiTietPhieuTra_Xml;
