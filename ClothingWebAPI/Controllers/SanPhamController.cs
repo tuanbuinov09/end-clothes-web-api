@@ -433,7 +433,7 @@ namespace ClothingWebAPI.Controllers
         }
         [HttpPut]
         [Route("incre-view")]
-        public IList<RESPONSE_ENTITY> IncreaseViewCount([FromQuery(Name = "productId")] string productId)
+        public RESPONSE_ENTITY IncreaseViewCount([FromQuery(Name = "productId")] string productId)
         {
             var response = new List<RESPONSE_ENTITY>();
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
@@ -468,7 +468,7 @@ namespace ClothingWebAPI.Controllers
                 }
 
             }
-            return response;
+            return response[0];
         }
 
         [HttpPost]
@@ -623,6 +623,129 @@ namespace ClothingWebAPI.Controllers
 
             }
             return listCTSanPham;
+        }
+
+
+        [HttpGet]
+        [Route("check-can-comment")]
+        public RESPONSE_ENTITY checkIfUserCanComment([FromQuery(Name = "productId")] string productId, [FromQuery(Name = "customerId")] string customerId)
+        {
+            var response = new List<RESPONSE_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("KIEM_TRA_KHACH_HANG_CO_THE_DANH_GIA_SP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = productId;
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+
+
+        [HttpPost]
+        [Route("rate")]
+        public RESPONSE_ENTITY rateProduct([FromBody] DANH_GIA_SAN_PHAM_ENTITY body)
+        {
+           
+            var response = new List<RESPONSE_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("THEM_DANH_GIA_SAN_PHAM", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = body.MA_SP;
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = body.MA_KH;
+                    cmd.Parameters.Add("@DANH_GIA", SqlDbType.Int).Value = body.DANH_GIA;
+                    cmd.Parameters.Add("@NOI_DUNG", SqlDbType.NVarChar).Value = body.NOI_DUNG;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+
+
+        [HttpGet]
+        [Route("all-comment")]
+        public List<DANH_GIA_SAN_PHAM_ENTITY> getAllComment([FromQuery(Name = "productId")] string productId)
+        {
+            var response = new List<DANH_GIA_SAN_PHAM_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_DANH_GIA_CUA_SAN_PHAM", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = productId;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        response = HelperFunction.DataReaderMapToList<DANH_GIA_SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response;
         }
     }
 
