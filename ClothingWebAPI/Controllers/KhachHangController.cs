@@ -377,5 +377,95 @@ namespace ClothingWebAPI.Controllers
 
             return response;
         }
+
+        [HttpPost]
+        [Route("favorite")]
+        public RESPONSE_ENTITY favoriteProduct([FromQuery(Name = "customerId")] string customerId, [FromQuery(Name = "productId")] string productId)
+        {
+
+            var response = new List<RESPONSE_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("THICH_BO_THICH_SAN_PHAM", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;
+                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = productId;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+
+        [HttpGet]
+        [Route("favorite")]
+        public List<SAN_PHAM_ENTITY> getFavoriteProduct([FromQuery(Name = "customerId")] string customerId, [FromQuery(Name = "populated")] string populated)
+        {
+
+            var listFavouriteProducts = new List<SAN_PHAM_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_DANH_SACH_YEU_THICH_CUA_KH", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;
+
+                    if (populated != null && populated != "")
+                    {
+                        cmd.Parameters.Add("@POPULATED", SqlDbType.Int).Value = populated; // có thể null
+                    }
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        listFavouriteProducts = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return listFavouriteProducts;
+        }
     }
 }

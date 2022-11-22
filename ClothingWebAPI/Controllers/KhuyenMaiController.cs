@@ -62,36 +62,36 @@ namespace ClothingWebAPI.Controllers
         //    }
         //    return null;
         //}
-        [HttpGet]
-        [Route("product")]
-        public IEnumerable<KHUYEN_MAI> GetAllSaleOffProducts([FromQuery(Name = "offset")] string offset, [FromQuery(Name = "limit")] string limit)
-        {
-            if (offset != null & limit != null)
-            {
-                using (var db = new CLOTHING_STOREContext())
-                {
+        //[HttpGet]
+        //[Route("product")]
+        //public IEnumerable<KHUYEN_MAI> GetAllSaleOffProducts([FromQuery(Name = "offset")] string offset, [FromQuery(Name = "limit")] string limit)
+        //{
+        //    if (offset != null & limit != null)
+        //    {
+        //        using (var db = new CLOTHING_STOREContext())
+        //        {
                    
-                        var listKhuyenMai = db.KHUYEN_MAI.Include(khuyenMai => khuyenMai.CHI_TIET_KHUYEN_MAI)
-                        .ThenInclude(chiTietKhuyenMai => chiTietKhuyenMai.MA_SPNavigation)
-                        .ThenInclude(sanPham=>sanPham.CHI_TIET_SAN_PHAM)
-                        //.Where(khuyenMai => DateTime.Compare(DateTime.Now, (DateTime) khuyenMai.NGAY_AP_DUNG)>=0 && (DateTime.Now - (DateTime)khuyenMai.NGAY_AP_DUNG).TotalHours <=khuyenMai.THOI_GIAN)
-                        .OrderByDescending(khuyenMai => khuyenMai.NGAY_AP_DUNG)
-                        .Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
-                        return listKhuyenMai;
-                }
-            }
-            using (var db = new CLOTHING_STOREContext())
-            {
-                var listKhuyenMai = db.KHUYEN_MAI.Include(khuyenMai => khuyenMai.CHI_TIET_KHUYEN_MAI)
-                     .ThenInclude(chiTietKhuyenMai => chiTietKhuyenMai.MA_SPNavigation)
-                     .ThenInclude(sanPham => sanPham.CHI_TIET_SAN_PHAM)
-                    //.Where(khuyenMai => DateTime.Compare(DateTime.Now, (DateTime)khuyenMai.NGAY_AP_DUNG) >= 0 && (DateTime.Now - (DateTime)khuyenMai.NGAY_AP_DUNG).TotalHours <= khuyenMai.THOI_GIAN)
-                    .OrderByDescending(khuyenMai => khuyenMai.NGAY_AP_DUNG).ToList();
-                return listKhuyenMai;
+        //                var listKhuyenMai = db.KHUYEN_MAI.Include(khuyenMai => khuyenMai.CHI_TIET_KHUYEN_MAI)
+        //                .ThenInclude(chiTietKhuyenMai => chiTietKhuyenMai.MA_SPNavigation)
+        //                .ThenInclude(sanPham=>sanPham.CHI_TIET_SAN_PHAM)
+        //                //.Where(khuyenMai => DateTime.Compare(DateTime.Now, (DateTime) khuyenMai.NGAY_AP_DUNG)>=0 && (DateTime.Now - (DateTime)khuyenMai.NGAY_AP_DUNG).TotalHours <=khuyenMai.THOI_GIAN)
+        //                .OrderByDescending(khuyenMai => khuyenMai.NGAY_AP_DUNG)
+        //                .Skip(int.Parse(offset)).Take(int.Parse(limit)).ToList();
+        //                return listKhuyenMai;
+        //        }
+        //    }
+        //    using (var db = new CLOTHING_STOREContext())
+        //    {
+        //        var listKhuyenMai = db.KHUYEN_MAI.Include(khuyenMai => khuyenMai.CHI_TIET_KHUYEN_MAI)
+        //             .ThenInclude(chiTietKhuyenMai => chiTietKhuyenMai.MA_SPNavigation)
+        //             .ThenInclude(sanPham => sanPham.CHI_TIET_SAN_PHAM)
+        //            //.Where(khuyenMai => DateTime.Compare(DateTime.Now, (DateTime)khuyenMai.NGAY_AP_DUNG) >= 0 && (DateTime.Now - (DateTime)khuyenMai.NGAY_AP_DUNG).TotalHours <= khuyenMai.THOI_GIAN)
+        //            .OrderByDescending(khuyenMai => khuyenMai.NGAY_AP_DUNG).ToList();
+        //        return listKhuyenMai;
 
-            }
-            return null;
-        }
+        //    }
+        //    return null;
+        //}
         [HttpGet]
         [Route("all")]
         public async Task<IList<KHUYEN_MAI_ENTITY>> GetAllDotKhuyenMai([FromQuery(Name = "filterState")] int filterState)
@@ -201,7 +201,7 @@ namespace ClothingWebAPI.Controllers
 
         [HttpGet]
         [Route("")]
-        public KHUYEN_MAI_ENTITY GetOnePhieuNhap([FromQuery(Name = "saleOffId")] string saleOffId)
+        public KHUYEN_MAI_ENTITY GetOneDotKhuyenMai([FromQuery(Name = "saleOffId")] string saleOffId)
         {
             var dotKhuyenMai = new KHUYEN_MAI_ENTITY();
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
@@ -268,6 +268,42 @@ namespace ClothingWebAPI.Controllers
             }
             return dotKhuyenMai;
         }
+        [HttpDelete]
+        [Route("delete")]
+        public RESPONSE_ENTITY DeleteDotKhuyenMai([FromQuery(Name = "saleOffId")] string saleOffId)
+        {
+            var response = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("XOA_DOT_KHUYEN_MAI", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.Add("@MA_KM", SqlDbType.VarChar).Value = saleOffId;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response;
+        }
     }
 }
