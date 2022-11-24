@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using ClothingWebAPI.Entities;
@@ -20,6 +14,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using ClothingWebAPI.Interfaces;
+using System.Collections.Generic;
 
 namespace ClothingWebAPI
 {
@@ -62,32 +58,32 @@ namespace ClothingWebAPI
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
-            //jwt
-            var jwtSection = Configuration.GetSection("JWTSettings");
-            services.Configure<JWTSettings>(jwtSection);
+            ////jwt
+            //var jwtSection = Configuration.GetSection("JWTSettings");
+            //services.Configure<JWTSettings>(jwtSection);
 
-            //to validate the token which has been sent by clients
-            var appSettings = jwtSection.Get<JWTSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+            ////to validate the token which has been sent by clients
+            //var appSettings = jwtSection.Get<JWTSettings>();
+            //var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = true;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //.AddJwtBearer(x =>
+            //{
+            //    x.RequireHttpsMetadata = true;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(key),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //        ClockSkew = TimeSpan.Zero
+            //    };
+            //});
 
             // Register the Swagger Generator service. This service is responsible for genrating Swagger Documents.
             // Note: Add this service at the end after AddMvc() or AddMvcCore().
@@ -105,10 +101,69 @@ namespace ClothingWebAPI
                         Url = new Uri("https://github.com/tuanbuinov09"),
                     },
                 });
+                //in swagger UI/ use Post Authentication/authenticate to get token, Then Goto top right, enter Bearer + ' ' + token, to authorize swagger api call 
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                  {
+                    {
+                      new OpenApiSecurityScheme
+                      {
+                        Reference = new OpenApiReference
+                          {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                          },
+                          Scheme = "oauth2",
+                          Name = "Bearer",
+                          In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                      }
+                    });
+
             });
 
-            services.AddControllers();
+            //jwt
+            var jwtSection = Configuration.GetSection("JWTSettings");
+            services.Configure<JWTSettings>(jwtSection);
 
+            //to validate the token which has been sent by clients
+            var appSettings = jwtSection.Get<JWTSettings>();
+            //var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+
+            services.AddControllers();
+            var key = appSettings.SecretKey;
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(key));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

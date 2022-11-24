@@ -13,6 +13,8 @@ using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+
 namespace ClothingWebAPI.Controllers
 {
     [ApiController]
@@ -471,8 +473,10 @@ namespace ClothingWebAPI.Controllers
             return response[0];
         }
 
+        [Authorize]
         [HttpPost]
         [Route("add")]
+        
         public RESPONSE_ENTITY InsertProduct([FromBody] SAN_PHAM_ENTITY body)
         {
             // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
@@ -521,6 +525,7 @@ namespace ClothingWebAPI.Controllers
             }
             return response[0];
         }
+        [Authorize]
         [HttpDelete]
         [Route("delete")]
         public RESPONSE_ENTITY DeleteProduct([FromQuery(Name = "productId")] string productId)
@@ -664,7 +669,7 @@ namespace ClothingWebAPI.Controllers
             return response[0];
         }
 
-
+        [Authorize]
         [HttpPost]
         [Route("rate")]
         public RESPONSE_ENTITY rateProduct([FromBody] DANH_GIA_SAN_PHAM_ENTITY body)

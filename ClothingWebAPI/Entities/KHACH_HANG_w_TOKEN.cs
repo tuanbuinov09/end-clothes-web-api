@@ -21,7 +21,7 @@ namespace ClothingWebAPI.Entities
             this.TEN_QUYEN = khachHang.TEN_QUYEN;
         }
 
-        public string AccessToken { get; set; }
+        public string accessToken { get; set; }
         public string RefreshToken { get; set; }
     }
 }

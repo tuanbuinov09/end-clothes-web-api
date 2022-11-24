@@ -1,4 +1,6 @@
 ﻿using ClothingWebAPI.Entities;
+using ClothingWebAPI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -16,16 +18,20 @@ namespace ClothingWebAPI.Controllers
     [Route("api/[controller]")]
     public class KhachHangController : ControllerBase
     {
+        private readonly IJwtAuthenticationManager jwtAuthenticationManager;
+
         private readonly ILogger<KhachHangController> _logger;
         private readonly JWTSettings _jwtsettings;
         private readonly IConfiguration _configuration;
-        public KhachHangController(IConfiguration configuration, ILogger<KhachHangController> logger, IOptions<JWTSettings> jwtsettings)
+        public KhachHangController(IConfiguration configuration, ILogger<KhachHangController> logger, IOptions<JWTSettings> jwtsettings, IJwtAuthenticationManager jwtAuthenticationManager)
         {
             _logger = logger;
             _configuration = configuration;
             _jwtsettings = jwtsettings.Value;
-        }
+            this.jwtAuthenticationManager = jwtAuthenticationManager;
 
+        }
+      
         [HttpGet]
         [Route("all-has-purchased")]
         public async Task<IList<KHACH_HANG_ENTITY>> GetAllKhachHangTungMuaHang()
@@ -93,22 +99,14 @@ namespace ClothingWebAPI.Controllers
 
             if (khachHangReturnFromSP != null)
             {
-                //RefreshToken refreshToken = GenerateRefreshToken();
-                //user.RefreshTokens.Add(refreshToken);
-                //await _context.SaveChangesAsync();
 
                 userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
+                userWithToken.accessToken = jwtAuthenticationManager.authenticate(userWithToken.EMAIL, userWithToken.MAT_KHAU);
                 //userWithToken.RefreshToken = refreshToken.Token;
-            }
 
-            if (userWithToken == null)
-            {
-                return NotFound();
             }
-
-            //sign your token here here..
-            //userWithToken.AccessToken = GenerateAccessToken(user.UserId);
             return userWithToken;
+
         }
         [HttpPost]
         [Route("sign-up")]
@@ -152,6 +150,8 @@ namespace ClothingWebAPI.Controllers
 
                 userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
                 //userWithToken.RefreshToken = refreshToken.Token;
+                userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
+                userWithToken.accessToken = jwtAuthenticationManager.authenticate(userWithToken.EMAIL, userWithToken.MAT_KHAU);
             }
 
             if (userWithToken == null)
@@ -204,6 +204,7 @@ namespace ClothingWebAPI.Controllers
 
             return userWithToken;
         }
+        
         [HttpPost]
         [Route("add-cart")]
         public async Task<ActionResult<string>> TaoGioHang(GIO_HANG_ENTITY gioHang)
@@ -347,7 +348,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listGioHang;
         }
-
+        [Authorize]
         [HttpPut]
         [Route("cancel-cart")]
         public async Task<ActionResult<RESPONSE_ENTITY>> CancelCart(DUYET_GIAO_GH_ENTITY duyetGiao)
@@ -377,7 +378,7 @@ namespace ClothingWebAPI.Controllers
 
             return response;
         }
-
+        [Authorize]
         [HttpPost]
         [Route("favorite")]
         public RESPONSE_ENTITY favoriteProduct([FromQuery(Name = "customerId")] string customerId, [FromQuery(Name = "productId")] string productId)

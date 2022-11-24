@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ClothingWebAPI.Entities;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -127,6 +128,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listKhuyenMai;
         }
+        [Authorize]
         [HttpPost]
         [Route("add-sale-off")]
         public async Task<ActionResult<RESPONSE_ENTITY>> addSaleOff([FromBody] KHUYEN_MAI_ENTITY khuyenMai)
@@ -162,7 +164,7 @@ namespace ClothingWebAPI.Controllers
 
             return response;
         }
-
+        [Authorize]
         [HttpPut]
         [Route("edit-sale-off")]
         public async Task<ActionResult<RESPONSE_ENTITY>> editSaleOff([FromBody] KHUYEN_MAI_ENTITY khuyenMai)
@@ -268,6 +270,7 @@ namespace ClothingWebAPI.Controllers
             }
             return dotKhuyenMai;
         }
+        [Authorize]
         [HttpDelete]
         [Route("delete")]
         public RESPONSE_ENTITY DeleteDotKhuyenMai([FromQuery(Name = "saleOffId")] string saleOffId)

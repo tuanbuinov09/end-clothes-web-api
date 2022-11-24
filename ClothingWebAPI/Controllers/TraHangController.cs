@@ -13,6 +13,7 @@ using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -135,6 +136,7 @@ namespace ClothingWebAPI.Controllers
             }
             return phieuTra;
         }
+        [Authorize]
         [HttpPost]
         [Route("add-product-return")]
         public async Task<ActionResult<RESPONSE_ENTITY>> addProductReturn([FromBody] PHIEU_TRA_ENTITY phieuTra)

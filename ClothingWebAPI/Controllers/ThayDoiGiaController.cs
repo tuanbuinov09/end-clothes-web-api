@@ -13,6 +13,7 @@ using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -135,6 +136,7 @@ namespace ClothingWebAPI.Controllers
         //    }
         //    return phieuTra;
         //}
+        [Authorize]
         [HttpPost]
         [Route("add-price-change")]
         public async Task<ActionResult<RESPONSE_ENTITY>> addPriceChange([FromBody] THAY_DOI_GIA_INPUT_ENTITY thayDoiGia)
