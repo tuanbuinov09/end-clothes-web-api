@@ -13,6 +13,7 @@ using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -135,6 +136,7 @@ namespace ClothingWebAPI.Controllers
             }
             return phieuNhap;
         }
+        [Authorize]
         [HttpPost]
         [Route("add-product-import")]
         public async Task<ActionResult<RESPONSE_ENTITY>> addProductImport([FromBody] PHIEU_NHAP_ENTITY phieuNhap)

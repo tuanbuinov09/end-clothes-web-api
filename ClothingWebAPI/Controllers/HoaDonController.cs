@@ -10,6 +10,7 @@ using ClothingWebAPI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ClothingWebAPI.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -52,8 +53,8 @@ namespace ClothingWebAPI.Controllers
             return hd;
         }
 
-
-    [HttpPost]
+        [Authorize]
+        [HttpPost]
         public async Task<ActionResult<string>> Post(HOA_DON hoaDon)
         {
 

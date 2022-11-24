@@ -1,8 +1,10 @@
 ﻿using ClosedXML.Excel;
 using ClothingWebAPI.Entities;
+using ClothingWebAPI.Interfaces;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -21,14 +23,16 @@ namespace ClothingWebAPI.Controllers
     [Route("api/[controller]")]
     public class NhanVienController : ControllerBase
     {
+        private readonly IJwtAuthenticationManager jwtAuthenticationManager;
         private readonly ILogger<NhanVienController> _logger;
         private readonly JWTSettings _jwtsettings;
         private readonly IConfiguration _configuration;
-        public NhanVienController(IConfiguration configuration, ILogger<NhanVienController> logger, IOptions<JWTSettings> jwtsettings)
+        public NhanVienController(IConfiguration configuration, ILogger<NhanVienController> logger, IOptions<JWTSettings> jwtsettings, IJwtAuthenticationManager jwtAuthenticationManager)
         {
             _logger = logger;
             _configuration = configuration;
             _jwtsettings = jwtsettings.Value;
+            this.jwtAuthenticationManager = jwtAuthenticationManager;
         }
 
         // POST: api/NhanVien
@@ -36,7 +40,7 @@ namespace ClothingWebAPI.Controllers
         [Route("login")]
         public async Task<ActionResult<NHAN_VIEN_ENTITY>> Login(NHAN_VIEN_ENTITY nhanVien)
         {
-            var nhanVienReturnFromSP = new NHAN_VIEN_ENTITY();
+            NHAN_VIEN_ENTITY nhanVienReturnFromSP = null;
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
@@ -58,7 +62,12 @@ namespace ClothingWebAPI.Controllers
                     cmd.Connection.Close();
                 }
             }
+            if (nhanVienReturnFromSP != null)
+            {
+                nhanVienReturnFromSP.accessToken = jwtAuthenticationManager.authenticate(nhanVienReturnFromSP.EMAIL, nhanVienReturnFromSP.MAT_KHAU);
+                //userWithToken.RefreshToken = refreshToken.Token;
 
+            }
 
             return nhanVienReturnFromSP;
         }
@@ -127,6 +136,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listGioHang;
         }
+        [Authorize]
         [HttpPut]
         [Route("finish-cart")]
         public async Task<ActionResult<RESPONSE_ENTITY>> finishCart(DUYET_GIAO_GH_ENTITY duyetGiao)
@@ -209,7 +219,7 @@ namespace ClothingWebAPI.Controllers
 
             return data;
         }
-
+        [Authorize]
         [HttpGet]
         [Route("report-sale")]
         public async Task<IList<COL_CHART_DATA_ENTITY>> baoCaoDoanhThuTungThangTheoKhoang([FromQuery(Name = "from")] DateTime from, [FromQuery(Name = "to")] DateTime to)

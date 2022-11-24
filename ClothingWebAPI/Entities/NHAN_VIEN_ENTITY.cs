@@ -21,5 +21,6 @@ namespace ClothingWebAPI.Entities
         public string MA_QUYEN { get; set; }
         public string TEN_QUYEN { get; set; }
         public int SO_GH_NV_DANG_GIAO { get; set; }
+        public string accessToken { get; set; }
     }
 }

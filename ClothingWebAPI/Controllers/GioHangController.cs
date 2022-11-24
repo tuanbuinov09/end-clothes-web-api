@@ -13,6 +13,7 @@ using ClothingWebAPI.Entities;
 using System.Data.Common;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -68,6 +69,7 @@ namespace ClothingWebAPI.Controllers
 
         [HttpGet]
         [Route("")]
+
         public GIO_HANG_ENTITY GetOneGioHang([FromQuery(Name = "cartId")] string cartId)
         {
             var gioHang = new GIO_HANG_ENTITY();
@@ -235,7 +237,7 @@ namespace ClothingWebAPI.Controllers
 
         //    return response;
         //}
-
+        [Authorize]
         [HttpPut]
         [Route("assign-delivery")]
         public async Task<ActionResult<RESPONSE_ENTITY>> AssignCart(DUYET_GIAO_GH_ENTITY duyetGiao)
