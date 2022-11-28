@@ -71,8 +71,11 @@ namespace ClothingWebAPI.Controllers
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult<KHACH_HANG_w_TOKEN>> Login(KHACH_HANG_ENTITY khachHang)
-        {
-            var khachHangReturnFromSP= new KHACH_HANG_ENTITY();
+        { 
+            var khachHangReturnFromSP = new KHACH_HANG_ENTITY();
+
+            string tmpPass = HelperFunction.ComputeHash(khachHang.MAT_KHAU, "SHA512", null);
+
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
@@ -99,6 +102,13 @@ namespace ClothingWebAPI.Controllers
 
             if (khachHangReturnFromSP != null)
             {
+                //verify
+                bool flag = HelperFunction.VerifyHash(khachHang.MAT_KHAU, "SHA512", khachHangReturnFromSP.MAT_KHAU);
+
+                if (flag == false)
+                {
+                    return userWithToken;
+                }
 
                 userWithToken = new KHACH_HANG_w_TOKEN(khachHangReturnFromSP);
                 userWithToken.accessToken = jwtAuthenticationManager.authenticate(userWithToken.EMAIL, userWithToken.MAT_KHAU);
@@ -122,7 +132,8 @@ namespace ClothingWebAPI.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = khachHang.EMAIL;
-                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = khachHang.MAT_KHAU;
+
+                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash(khachHang.MAT_KHAU, "SHA512", null);
                     cmd.Parameters.Add("@diaChi", SqlDbType.NVarChar).Value = khachHang.DIA_CHI;
                     cmd.Parameters.Add("@soDienThoai", SqlDbType.VarChar).Value = khachHang.SDT;
                     cmd.Parameters.Add("@hoTen", SqlDbType.NVarChar).Value = khachHang.HO_TEN;

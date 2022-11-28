@@ -41,6 +41,8 @@ namespace ClothingWebAPI.Controllers
         public async Task<ActionResult<NHAN_VIEN_ENTITY>> Login(NHAN_VIEN_ENTITY nhanVien)
         {
             NHAN_VIEN_ENTITY nhanVienReturnFromSP = null;
+            string tmpPass = HelperFunction.ComputeHash(nhanVien.MAT_KHAU, "SHA512", null);
+
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
@@ -64,6 +66,14 @@ namespace ClothingWebAPI.Controllers
             }
             if (nhanVienReturnFromSP != null)
             {
+                //verify
+                bool flag = HelperFunction.VerifyHash(nhanVien.MAT_KHAU, "SHA512", nhanVienReturnFromSP.MAT_KHAU);
+
+                if (flag == false)
+                {
+                    return null;
+                }
+
                 nhanVienReturnFromSP.accessToken = jwtAuthenticationManager.authenticate(nhanVienReturnFromSP.EMAIL, nhanVienReturnFromSP.MAT_KHAU);
                 //userWithToken.RefreshToken = refreshToken.Token;
 
@@ -230,6 +240,48 @@ namespace ClothingWebAPI.Controllers
             {
                 // Use count to get all available items before the connection closes
                 using (SqlCommand cmd = new SqlCommand("BAO_CAO_DOANH_THU_THEO_KHOANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@fromDate", SqlDbType.DateTime).Value = from;
+                    cmd.Parameters.Add("@toDate", SqlDbType.DateTime).Value = to;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToList<COL_CHART_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return data;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("report-profit")]
+        public async Task<IList<COL_CHART_DATA_ENTITY>> baoCaoLoiNhuanTungThangTheoKhoang([FromQuery(Name = "from")] DateTime from, [FromQuery(Name = "to")] DateTime to, [FromQuery(Name = "type")] string type)
+        {
+            var data = new List<COL_CHART_DATA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+
+            string spName = "BAO_CAO_LOI_NHUAN_THEO_KHOANG";
+            if (type == "day")
+            {
+                spName = "BAO_CAO_LOI_NHUAN_THEO_NGAY";
+            }
+            if (type == "quarter")
+            {
+                spName = "BAO_CAO_LOI_NHUAN_THEO_QUY";
+            }
+            if (type == "year")
+            {
+                spName = "BAO_CAO_LOI_NHUAN_THEO_NAM";
+            }
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand(spName, con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@fromDate", SqlDbType.DateTime).Value = from;
