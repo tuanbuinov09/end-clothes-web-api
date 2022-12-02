@@ -16,6 +16,7 @@ namespace ClothingWebAPI.Entities
         public string NAM { get; set; } //datepart year
         public int TONG_DOANH_THU { get; set; }
         public int TONG_GIA_NHAP { get; set; }
+        public int TONG_GIA_TRA { get; set; }
         public int TONG_LOI_NHUAN { get; set; }
         public COL_CHART_DATA_ENTITY()
         {
