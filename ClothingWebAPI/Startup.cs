@@ -91,9 +91,9 @@ namespace ClothingWebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Clothing Website API v1",
-                    Version = "v1",
-                    Description = "Đồ án thực tập.",
+                    Title = "Clothing Website API",
+                    Version = "v1.8",
+                    Description = "Đồ án tốt nghiệp.",
                     Contact = new OpenApiContact
                     {
                         Name = "Bùi Quốc Tuấn",
