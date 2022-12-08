@@ -242,7 +242,45 @@ namespace ClothingWebAPI.Controllers
             }
             return listSanPham;
         }
+        [HttpGet]
+        [Route("by-category")]
+        public IList<SAN_PHAM_ENTITY> GetSanPhamTheoTheLoaij([FromQuery(Name = "top")] string top, [FromQuery(Name = "categoryId")] string categoryId)
+        {
+            var listSanPham = new List<SAN_PHAM_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_SP_THEO_THE_LOAI", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    if (top != null && top != "")
+                    {
+                        cmd.Parameters.Add("@top", SqlDbType.Int).Value = top; // có thể null
+                    }
+                    cmd.Parameters.Add("@MA_TL", SqlDbType.VarChar).Value = categoryId; // có thể null
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listSanPham;
+        }
         [HttpGet]
         [Route("search")]
         public IList<SAN_PHAM_ENTITY> SearchSanPham([FromQuery(Name = "top")] string top, [FromQuery(Name = "keyword")] string keyword)
