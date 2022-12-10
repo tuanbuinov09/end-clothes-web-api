@@ -20,6 +20,8 @@ namespace ClothingWebAPI.Entities
         public string MAT_KHAU { get; set; }
         public string MA_QUYEN { get; set; }
         public string TEN_QUYEN { get; set; }
+        public bool TRANG_THAI { get; set; }
+        public DateTime? NGAY_TAO { get; set; }
         public int SO_GH_NV_DANG_GIAO { get; set; }
         public string accessToken { get; set; }
     }
