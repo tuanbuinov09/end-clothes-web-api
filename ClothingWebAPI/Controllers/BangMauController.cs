@@ -9,109 +9,201 @@ using System.Data;
 using ClothingWebAPI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using ClothingWebAPI.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BangMauController : ControllerBase
+    public class bangMauController : ControllerBase
     {
-        private readonly ILogger<BangMauController> _logger;
+        private readonly ILogger<bangMauController> _logger;
 
         private readonly IConfiguration _configuration;
-        public BangMauController(IConfiguration configuration, ILogger<BangMauController> logger)
+        public bangMauController(IConfiguration configuration, ILogger<bangMauController> logger)
         {
             _logger = logger;
             _configuration = configuration;
         }
 
 
-       
+
         [HttpGet]
-        [Route("")]
-        public async Task<IEnumerable<BANG_MAU>> GetAll()
+        [Route("all")]
+        public async Task<IList<BANG_MAU_ENTITY>> GetAll2()
         {
-            using (var db = new CLOTHING_STOREContext())
+            List<BANG_MAU_ENTITY> listMAU = new List<BANG_MAU_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
-                var listBangMau = db.BANG_MAU.Include(bangMau => bangMau.CHI_TIET_SAN_PHAM).OrderBy(bangMau => bangMau.TEN_MAU).ToList();
-                return listBangMau;
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_MAU", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        listMAU = HelperFunction.DataReaderMapToList<BANG_MAU_ENTITY>(reader);
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
 
             }
-            return null;
+            return listMAU;
         }
-        [HttpGet("{id}")]
-
-        public async Task<BANG_MAU> GetById(string id)
+        [HttpGet]
+        public async Task<BANG_MAU_ENTITY> GetById2([FromQuery(Name = "colorId")] string colorId)
         {
-            using (var db = new CLOTHING_STOREContext())
+            BANG_MAU_ENTITY bangMauEntity = new BANG_MAU_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
-                var bangMau = db.BANG_MAU.Include(bangMau => bangMau.CHI_TIET_SAN_PHAM).Where(bangMau => bangMau.MA_MAU == id).FirstOrDefault();
-                return bangMau;
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_MOT_MAU", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_MAU", SqlDbType.VarChar).Value = colorId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        bangMauEntity = HelperFunction.DataReaderMapToEntity<BANG_MAU_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
             }
-            return null;
+            return bangMauEntity;
         }
+
+
+        [Authorize]
         [HttpPost]
-
-        public async Task<IActionResult> Post(BANG_MAU bangMau)
+        [Route("add")]
+        public RESPONSE_ENTITY InsertMAU([FromBody] BANG_MAU_ENTITY bangMau)
         {
+            var response = new RESPONSE_ENTITY();
 
-            using (var db = new CLOTHING_STOREContext())
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
-                db.BANG_MAU.Add(bangMau);
-                await db.SaveChangesAsync();
-                return CreatedAtAction("GetById", new { id = bangMau.MA_MAU }, bangMau);
-            }
-
-        }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, BANG_MAU bangMau)
-        {
-            if (id != bangMau.MA_MAU)
-            {
-                return BadRequest();
-            }
-
-            using (var db = new CLOTHING_STOREContext())
-            {
-                db.Entry(bangMau).State = EntityState.Modified;
-
-                try
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("THEM_MAU", con))
                 {
-                    await db.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BANG_MAU_exist(id))
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@TEN_MAU", SqlDbType.NVarChar).Value = bangMau.TEN_MAU;
+                    cmd.Parameters.Add("@TEN_TIENG_ANH", SqlDbType.VarChar).Value = bangMau.TEN_TIENG_ANH;
+                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = bangMau.MA_NV;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        return NotFound();
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    cmd.Connection.Close();
                 }
 
-                return NoContent();
             }
-
+            return response;
         }
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<BANG_MAU>> DeletePublisher(string id)
+        [Authorize]
+        [HttpPut]
+        [Route("edit")]
+        public RESPONSE_ENTITY EditMAU([FromBody] BANG_MAU_ENTITY bangMau)
         {
-            using (var db = new CLOTHING_STOREContext())
+            var response = new RESPONSE_ENTITY();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
-                var bangMau = await db.BANG_MAU.FindAsync(id);
-                if (bangMau == null)
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("SUA_MAU", con))
                 {
-                    return NotFound();
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_MAU", SqlDbType.VarChar).Value = bangMau.MA_MAU;
+                    cmd.Parameters.Add("@TEN_MAU", SqlDbType.NVarChar).Value = bangMau.TEN_MAU;
+                    cmd.Parameters.Add("@TEN_TIENG_ANH", SqlDbType.VarChar).Value = bangMau.TEN_TIENG_ANH;
+                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = bangMau.MA_NV;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
                 }
 
-                db.BANG_MAU.Remove(bangMau);
-                await db.SaveChangesAsync();
-
-                return bangMau;
             }
-               
+            return response;
+        }
+        [Authorize]
+        [HttpDelete]
+        [Route("delete")]
+        public RESPONSE_ENTITY DeleteMAU([FromQuery] string colorId)
+        {
+            var response = new RESPONSE_ENTITY();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("XOA_MAU", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_MAU", SqlDbType.VarChar).Value = colorId;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response;
         }
         private bool BANG_MAU_exist(string id)
         {

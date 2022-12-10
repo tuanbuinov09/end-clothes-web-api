@@ -9,6 +9,8 @@ using System.Data;
 using ClothingWebAPI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using ClothingWebAPI.Entities;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -47,42 +49,182 @@ namespace ClothingWebAPI.Controllers
 
         //    return new JsonResult(dataTable);
         //}
+
         [HttpGet]
-        [Route("")]
-        public async Task<IEnumerable<BANG_SIZE>> GetAll()
+        [Route("all")]
+        public async Task<IList<BANG_SIZE_ENTITY>> GetAll2()
         {
-            using (var db = new CLOTHING_STOREContext())
+            List<BANG_SIZE_ENTITY> listSize = new List<BANG_SIZE_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
-                var listBangSize = db.BANG_SIZE.Include(bangSize => bangSize.CHI_TIET_SAN_PHAM).OrderBy(bangSize => bangSize.MA_SIZE).ToList();
-                return listBangSize;
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_SIZE", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        listSize = HelperFunction.DataReaderMapToList<BANG_SIZE_ENTITY>(reader);
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
 
             }
-            return null;
+            return listSize;
         }
-        [HttpGet("{id}")]
-
-        public async Task<BANG_SIZE> GetById(string id)
+        [HttpGet]
+        public async Task<BANG_SIZE_ENTITY> GetById2([FromQuery(Name = "sizeId")] string sizeId)
         {
-            using (var db = new CLOTHING_STOREContext())
+            BANG_SIZE_ENTITY bangSizeEntity = new BANG_SIZE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
-                var bangSize = db.BANG_SIZE.Include(bangSize => bangSize.CHI_TIET_SAN_PHAM).Where(bangSize => bangSize.MA_SIZE == id).FirstOrDefault();
-                return bangSize;
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_MOT_SIZE", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SIZE", SqlDbType.VarChar).Value = sizeId;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        bangSizeEntity = HelperFunction.DataReaderMapToEntity<BANG_SIZE_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
             }
-            return null;
+            return bangSizeEntity;
         }
+
+        
+        [Authorize]
         [HttpPost]
-
-        public async Task<IActionResult> Post(BANG_SIZE bangSize)
+        [Route("add")]
+        public RESPONSE_ENTITY InsertSize([FromBody] BANG_SIZE_ENTITY bangSize)
         {
+            var response = new RESPONSE_ENTITY();
+         
+                //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+                using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+                {
+                    // Use count to get all available items before the connection closes
+                    using (SqlCommand cmd = new SqlCommand("THEM_SIZE", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-            using (var db = new CLOTHING_STOREContext())
-            {
-                db.BANG_SIZE.Add(bangSize);
-                await db.SaveChangesAsync();
-                return CreatedAtAction("GetById", new { id = bangSize.MA_SIZE }, bangSize);
-            }
+                        cmd.Parameters.Add("@TEN_SIZE", SqlDbType.NVarChar).Value = bangSize.TEN_SIZE;
+                        cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = bangSize.MA_NV;
+                        cmd.Connection.Open();
 
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                            // Map data to Order class using this way
+                            //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+                            // instead of this traditional way
+                            // while (reader.Read())
+                            // {
+                            // var o = new Order();
+                            // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                            // o.CustomerID = reader["CustomerID"].ToString();
+                            // orders.Add(o);
+                            // }
+                        }
+                        cmd.Connection.Close();
+                    }
+
+                }
+            return response;
         }
+        [Authorize]
+        [HttpPut]
+        [Route("edit")]
+        public RESPONSE_ENTITY EditSize([FromBody] BANG_SIZE_ENTITY bangSize)
+        {
+            var response = new RESPONSE_ENTITY();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("SUA_SIZE", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SIZE", SqlDbType.VarChar).Value = bangSize.MA_SIZE;
+                    cmd.Parameters.Add("@TEN_SIZE", SqlDbType.NVarChar).Value = bangSize.TEN_SIZE;
+                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = bangSize.MA_NV;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response;
+        }
+        [Authorize]
+        [HttpDelete]
+        [Route("delete")]
+        public RESPONSE_ENTITY DeleteSize([FromQuery] string sizeId)
+        {
+            var response = new RESPONSE_ENTITY();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("XOA_SIZE", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_SIZE", SqlDbType.VarChar).Value = sizeId;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response;
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, BANG_SIZE bangSize)
         {

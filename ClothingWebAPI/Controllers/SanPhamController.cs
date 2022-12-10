@@ -244,7 +244,7 @@ namespace ClothingWebAPI.Controllers
         }
         [HttpGet]
         [Route("by-category")]
-        public IList<SAN_PHAM_ENTITY> GetSanPhamTheoTheLoaij([FromQuery(Name = "top")] string top, [FromQuery(Name = "categoryId")] string categoryId)
+        public IList<SAN_PHAM_ENTITY> GetSanPhamTheoTheLoai([FromQuery(Name = "top")] string top, [FromQuery(Name = "categoryId")] string categoryId)
         {
             var listSanPham = new List<SAN_PHAM_ENTITY>();
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
