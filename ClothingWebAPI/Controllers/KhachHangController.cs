@@ -31,7 +31,148 @@ namespace ClothingWebAPI.Controllers
             this.jwtAuthenticationManager = jwtAuthenticationManager;
 
         }
-      
+        [HttpGet]
+        [Authorize]
+        [Route("all")]
+        public async Task<IList<KHACH_HANG_ENTITY>> GetAllKhachHang()
+        {
+            var listKhachHang = new List<KHACH_HANG_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_KHACH_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        listKhachHang = HelperFunction.DataReaderMapToList<KHACH_HANG_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return listKhachHang;
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("")]
+        public KHACH_HANG_ENTITY GetOneKhachHang([FromQuery(Name = "customerId")] string customerId)
+        {
+            var khachHang = new KHACH_HANG_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_MOT_KHACH_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;//có thể null
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        khachHang = HelperFunction.DataReaderMapToEntity<KHACH_HANG_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return khachHang;
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("deactivate")]
+        public RESPONSE_ENTITY DeactivateKhachHangAccount([FromQuery(Name = "customerId")] string customerId)
+        {
+            var res = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("VO_HIEU_HOA_TAI_KHOAN_KHACH_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;//có thể null
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        res = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return res;
+        }
+        [Authorize]
+        [HttpPut]
+        [Route("activate")]
+        public RESPONSE_ENTITY ActivateKhachHangAccount([FromQuery(Name = "customerId")] string customerId)
+        {
+            var res = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("KICH_HOAT_TAI_KHOAN_KHACH_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;//có thể null
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        res = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return res;
+        }
         [HttpGet]
         [Route("all-has-purchased")]
         public async Task<IList<KHACH_HANG_ENTITY>> GetAllKhachHangTungMuaHang()
@@ -512,7 +653,7 @@ namespace ClothingWebAPI.Controllers
             //userWithToken.AccessToken = GenerateAccessToken(user.UserId);
             //return userWithToken;
         }
-
+        [Authorize]
         [HttpGet]
         [Route("carts")]
         public async Task<IList<GIO_HANG_ENTITY>> GetAllGioHang([FromQuery(Name = "filterState")] int filterState, [FromQuery(Name = "customerId")] string customerId)

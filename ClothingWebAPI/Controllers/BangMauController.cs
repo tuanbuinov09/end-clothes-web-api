@@ -16,12 +16,12 @@ namespace ClothingWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class bangMauController : ControllerBase
+    public class BangMauController : ControllerBase
     {
-        private readonly ILogger<bangMauController> _logger;
+        private readonly ILogger<BangMauController> _logger;
 
         private readonly IConfiguration _configuration;
-        public bangMauController(IConfiguration configuration, ILogger<bangMauController> logger)
+        public BangMauController(IConfiguration configuration, ILogger<BangMauController> logger)
         {
             _logger = logger;
             _configuration = configuration;
