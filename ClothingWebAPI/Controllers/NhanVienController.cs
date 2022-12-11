@@ -198,8 +198,8 @@ namespace ClothingWebAPI.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = nhanVien.EMAIL;
-
-                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash(nhanVien.MAT_KHAU, "SHA512", null);
+                    //khi theme nhana vien thi mat khau mac dinh 123456
+                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash("123456", "SHA512", null);
                     cmd.Parameters.Add("@diaChi", SqlDbType.NVarChar).Value = nhanVien.DIA_CHI;
                     cmd.Parameters.Add("@soDienThoai", SqlDbType.VarChar).Value = nhanVien.SDT;
                     cmd.Parameters.Add("@hoTen", SqlDbType.NVarChar).Value = nhanVien.HO_TEN;
@@ -276,14 +276,15 @@ namespace ClothingWebAPI.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = nhanVien.EMAIL;
+                    //cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = nhanVien.EMAIL;
 
-                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash(nhanVien.MAT_KHAU, "SHA512", null);
+                    //cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash(nhanVien.MAT_KHAU, "SHA512", null);
                     cmd.Parameters.Add("@diaChi", SqlDbType.NVarChar).Value = nhanVien.DIA_CHI;
                     cmd.Parameters.Add("@soDienThoai", SqlDbType.VarChar).Value = nhanVien.SDT;
                     cmd.Parameters.Add("@hoTen", SqlDbType.NVarChar).Value = nhanVien.HO_TEN;
                     cmd.Parameters.Add("@cmnd", SqlDbType.NVarChar).Value = nhanVien.CMND;
                     cmd.Parameters.Add("@maQuyen", SqlDbType.VarChar).Value = nhanVien.MA_QUYEN;
+                    cmd.Parameters.Add("@maNhanVien", SqlDbType.VarChar).Value = nhanVien.MA_NV;
 
                     cmd.Connection.Open();
 
@@ -312,7 +313,7 @@ namespace ClothingWebAPI.Controllers
                 using (SqlCommand cmd = new SqlCommand("KIEM_TRA_SUA_NHAN_VIEN", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-         
+
                     cmd.Parameters.Add("@phone", SqlDbType.VarChar).Value = nhanVien.SDT;
                     cmd.Parameters.Add("@cmnd", SqlDbType.VarChar).Value = nhanVien.CMND;
                     cmd.Parameters.Add("@maNhanVien", SqlDbType.VarChar).Value = nhanVien.MA_NV;
@@ -335,6 +336,38 @@ namespace ClothingWebAPI.Controllers
             }
             return nhanVienReturnFromSP;
         }
+        [Authorize]
+        [HttpPut]
+        [Route("reset-password")]
+        public async Task<ActionResult<RESPONSE_ENTITY>> ResetMatKhauNhanVien([FromQuery(Name = "employeeId")] string employeeId)
+        {
+            var res = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("RESET_MAT_KHAU_NHAN_VIEN", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //reset mật khẩu nhân viên mặc định là 123456
+                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash("123456", "SHA512", null);
+                    cmd.Parameters.Add("@maNhanVien", SqlDbType.VarChar).Value = employeeId;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        res = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return res;
+        }
+        
         [Authorize]
         [HttpPut]
         [Route("change-info")]
