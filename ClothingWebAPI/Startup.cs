@@ -31,7 +31,7 @@ namespace ClothingWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+           
             // adding the MultiPartBodyLength Configuration
             services.Configure<FormOptions>(options =>
             {
@@ -164,6 +164,13 @@ namespace ClothingWebAPI
             });
 
             services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(key));
+
+            var emailConfig = Configuration
+                   .GetSection("EmailConfiguration")
+                   .Get<EmailConfiguration>();
+
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddSingleton(emailConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

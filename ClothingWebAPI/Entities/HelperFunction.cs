@@ -226,6 +226,18 @@ namespace ClothingWebAPI.Entities
             // the plain text value must be correct.
             return (hashValue == expectedHashString);
         }
+        public static string GetNumericOTP()
+        {
+            string numbers = "0123456789";
+            Random random = new Random();
+            string otp = string.Empty;
+            for (int i = 0; i < 6; i++)
+            {
+                int tempval = random.Next(0, numbers.Length);
+                otp += tempval;
+            }
+            return otp;
+        }
 
     }
 }

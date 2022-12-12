@@ -23,12 +23,14 @@ namespace ClothingWebAPI.Controllers
         private readonly ILogger<KhachHangController> _logger;
         private readonly JWTSettings _jwtsettings;
         private readonly IConfiguration _configuration;
-        public KhachHangController(IConfiguration configuration, ILogger<KhachHangController> logger, IOptions<JWTSettings> jwtsettings, IJwtAuthenticationManager jwtAuthenticationManager)
+        private readonly IEmailSender _emailSender;
+        public KhachHangController(IConfiguration configuration, ILogger<KhachHangController> logger, IOptions<JWTSettings> jwtsettings, IJwtAuthenticationManager jwtAuthenticationManager, IEmailSender emailSender)
         {
             _logger = logger;
             _configuration = configuration;
             _jwtsettings = jwtsettings.Value;
             this.jwtAuthenticationManager = jwtAuthenticationManager;
+            _emailSender = emailSender;
 
         }
         [HttpGet]
@@ -808,6 +810,82 @@ namespace ClothingWebAPI.Controllers
 
             }
             return listFavouriteProducts;
+        }
+
+        [HttpPut]
+        [Route("forgot-password")]
+        public async Task<ActionResult<RESPONSE_ENTITY>> ForgetMatKhauKhachHang([FromQuery(Name = "email")] string email, [FromQuery(Name = "otp")] string otp, [FromQuery(Name = "password")] string password)
+        {
+            var res = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("KHACH_HANG_QUEN_MAT_KHAU", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //reset mật khẩu nhân viên mặc định là 123456
+                    cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = HelperFunction.ComputeHash(password, "SHA512", null);
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = email;
+                    cmd.Parameters.Add("@otp", SqlDbType.VarChar).Value = otp;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        res = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return res;
+        }
+
+        [HttpPost]
+        [Route("add-otp")]
+        public async Task<ActionResult<RESPONSE_ENTITY>> insertOtpKhachHang([FromQuery(Name = "email")] string email)
+        {
+            string otp = HelperFunction.GetNumericOTP();
+            var res = new RESPONSE_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("TAO_OTP", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //reset mật khẩu nhân viên mặc định là 123456
+                   
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = email;
+                    cmd.Parameters.Add("@otp", SqlDbType.VarChar).Value = otp;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        res = HelperFunction.DataReaderMapToEntity<RESPONSE_ENTITY>(reader);
+
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            //nếu có lỗi thì trả lỗi
+            if (res.errorDesc != "" && res.errorDesc != null)
+            {
+               return res;
+            }else
+            {
+                //nếu không lỗi gửi mail
+                
+                var message = new MailMessage(new string[] { email }, "Thông báo mã xác thực mật khẩu", otp);
+                _emailSender.SendEmail(message);
+            }
+
+            return res;
         }
     }
 }
