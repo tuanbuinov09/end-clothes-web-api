@@ -563,6 +563,61 @@ namespace ClothingWebAPI.Controllers
             }
             return response[0];
         }
+
+        [Authorize]
+        [HttpPut]
+        [Route("edit")]
+        public RESPONSE_ENTITY EditProduct([FromBody] SAN_PHAM_ENTITY body)
+        {
+            // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
+            var listHinhAnhSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.hinhAnhSanPham);
+            var listChiTietSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.chiTietSanPham);
+            var response = new List<RESPONSE_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("SUA_SAN_PHAM", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@TEN_SP", SqlDbType.NVarChar).Value = body.TEN_SP;
+                    cmd.Parameters.Add("@MA_TL", SqlDbType.VarChar).Value = body.MA_TL;
+                    cmd.Parameters.Add("@HINH_ANH", SqlDbType.NVarChar).Value = body.HINH_ANH;
+                    cmd.Parameters.Add("@MO_TA", SqlDbType.NVarChar).Value = body.MO_TA;
+                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = body.MA_NV;
+
+                    cmd.Parameters.Add("@xml_LIST_HINH_ANH_SP_STR", SqlDbType.NVarChar).Value = listHinhAnhSanPham_Xml;
+                    cmd.Parameters.Add("@xml_LIST_CHI_TIET_SP_STR", SqlDbType.NVarChar).Value = listChiTietSanPham_Xml;
+
+                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = body.MA_SP;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+
         [Authorize]
         [HttpDelete]
         [Route("delete")]
