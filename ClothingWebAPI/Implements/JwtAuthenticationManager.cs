@@ -30,7 +30,7 @@ namespace ClothingWebAPI.Interfaces
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Email, email) }),
-                Expires = DateTime.UtcNow.AddHours(240),
+                Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
