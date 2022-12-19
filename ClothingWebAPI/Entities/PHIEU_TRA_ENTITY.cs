@@ -11,7 +11,7 @@ namespace ClothingWebAPI.Entities
         {
         }
         public string MA_PT { get; set; }
-        public int ID_GH { get; set; }
+        public int ID_DH { get; set; }
         public string MA_HD { get; set; }
         public string MA_KH { get; set; }
         public string HO_TEN_KH { get; set; }

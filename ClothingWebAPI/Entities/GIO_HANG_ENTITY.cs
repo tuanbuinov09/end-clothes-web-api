@@ -10,7 +10,7 @@ namespace ClothingWebAPI.Entities
             public GIO_HANG_ENTITY()
         {
         }
-        public int ID_GH { get; set; }
+        public int ID_DH { get; set; }
         public string MA_KH { get; set; }
         public string HO_TEN_KH { get; set; }
         public string SDT_KH { get; set; }
