@@ -661,7 +661,7 @@ namespace ClothingWebAPI.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@ID_GH", SqlDbType.Int).Value = duyetGiao.ID_GH;
+                    cmd.Parameters.Add("@ID_GH", SqlDbType.Int).Value = duyetGiao.ID_DH;
 
                     cmd.Connection.Open();
 

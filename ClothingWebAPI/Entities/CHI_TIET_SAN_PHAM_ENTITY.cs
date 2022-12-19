@@ -9,7 +9,7 @@ namespace ClothingWebAPI.Entities
         {
           
         }
-        public int ID_GH { get; set; }
+        public int ID_DH { get; set; }
         public int MA_CT_SP { get; set; }
         public string MA_SP { get; set; }
         public string MA_SIZE { get; set; }
