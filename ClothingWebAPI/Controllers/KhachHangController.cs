@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -547,6 +548,224 @@ namespace ClothingWebAPI.Controllers
             }
 
             return userWithToken;
+        }
+        [Authorize]
+        [HttpPost]
+        [Route("add-or-update-cart")]
+        public RESPONSE_ENTITY InsertOrUpdateCart([FromBody] GIO_HANG_ENTITY body)
+        {
+            // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
+            var listChiTietSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.chiTietGioHang);
+            var response = new List<RESPONSE_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("THEM_HOAC_CAP_NHAT_GIO_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = body.MA_KH;
+                    cmd.Parameters.Add("@xml_LIST_CHI_TIET_SP_STR", SqlDbType.NVarChar).Value = listChiTietSanPham_Xml;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+        [Authorize]
+        [HttpPost]
+        [Route("validate-purchase-quantity")]
+        public RESPONSE_ENTITY ValidatePurchaseQuantityCart([FromBody] GIO_HANG_ENTITY body)
+        {
+            // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
+            var listChiTietSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.chiTietGioHang);
+            var response = new List<RESPONSE_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("KIEM_TRA_SO_LUONG_KHI_THANH_TOAN_GIO_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = body.MA_KH;
+                    cmd.Parameters.Add("@xml_LIST_CHI_TIET_SP_STR", SqlDbType.NVarChar).Value = listChiTietSanPham_Xml;
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+        [HttpPost]
+        [Route("purchase-cart")]
+        public RESPONSE_ENTITY PurchaseCart([FromBody] GIO_HANG_ENTITY body)
+        {
+            // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
+            var listChiTietSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.chiTietGioHang);
+            var response = new List<RESPONSE_ENTITY>();
+
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("THANH_TOAN_GIO_HANG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = body.MA_KH;
+                    cmd.Parameters.Add("@HO_TEN", SqlDbType.NVarChar).Value = body.HO_TEN;
+                    cmd.Parameters.Add("@SDT", SqlDbType.VarChar).Value = body.SDT;
+                    cmd.Parameters.Add("@EMAIL", SqlDbType.VarChar).Value = body.EMAIL;
+                    cmd.Parameters.Add("@DIA_CHI", SqlDbType.NVarChar).Value = body.DIA_CHI;
+                    cmd.Parameters.Add("@xml_LIST_CHI_TIET_SP_STR", SqlDbType.NVarChar).Value = listChiTietSanPham_Xml;
+                    if (body.GHI_CHU != null)
+                    {
+                        cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = body.GHI_CHU;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("@GHI_CHU", SqlDbType.NVarChar).Value = "";
+                    }
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
+
+                        // Map data to Order class using this way
+                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+
+            }
+            return response[0];
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("current-cart-of-user")]
+
+        public GIO_HANG_ENTITY GetGioHangMinus99([FromQuery(Name = "customerId")] string customerId)
+        {
+            var gioHang = new GIO_HANG_ENTITY();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("LAY_GIO_HANG_TRANG_THAI_AM_99_CUA_NGUOI_DUNG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId.Trim();//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        gioHang = HelperFunction.DataReaderMapToEntity<GIO_HANG_ENTITY>(reader);
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+                if(gioHang == null)
+                {
+                    //gioHang.chiTietGioHang2 = new List<CHI_TIET_GIO_HANG_ENTITY>();
+                    return new GIO_HANG_ENTITY();
+                }
+                using (SqlCommand cmd = new SqlCommand("LAY_CHI_TIET_GIO_HANG_TRANG_THAI_AM_99_CUA_NGUOI_DUNG", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@ID_GH", SqlDbType.Int).Value = gioHang.ID_DH;//có thể null
+
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        try
+                        {
+                            gioHang.chiTietGioHang2 = HelperFunction.DataReaderMapToList<CHI_TIET_GIO_HANG_ENTITY>(reader).ToList();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Write("catch truowngf hop ma k ton tai nen k the tim ctsp");
+                        }
+
+                        // instead of this traditional way
+                        // while (reader.Read())
+                        // {
+                        // var o = new Order();
+                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
+                        // o.CustomerID = reader["CustomerID"].ToString();
+                        // orders.Add(o);
+                        // }
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return gioHang;
         }
         [HttpPost]
         [Route("add-cart")]

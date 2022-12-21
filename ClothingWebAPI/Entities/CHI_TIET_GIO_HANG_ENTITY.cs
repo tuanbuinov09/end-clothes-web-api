@@ -20,6 +20,7 @@ namespace ClothingWebAPI.Entities
         public string TEN_MAU { get; set; }
         public int? GIA { get; set; }
         public int SO_LUONG { get; set; }
+        public int SO_LUONG_TON { get; set; }
         public int SL_DA_TRA { get; set; }
         public int SL_TRA { get; set; }
     }

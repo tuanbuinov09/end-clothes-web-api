@@ -19,12 +19,12 @@ namespace ClothingWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GioHangController : ControllerBase
+    public class DonHangController : ControllerBase
     {
         private readonly ILogger<SanPhamController> _logger;
 
         private readonly IConfiguration _configuration;
-        public GioHangController(IConfiguration configuration, ILogger<SanPhamController> logger)
+        public DonHangController(IConfiguration configuration, ILogger<SanPhamController> logger)
         {
             _logger = logger;
             _configuration = configuration;
@@ -269,6 +269,7 @@ namespace ClothingWebAPI.Controllers
 
             return response;
         }
+        
     }
 
 }
