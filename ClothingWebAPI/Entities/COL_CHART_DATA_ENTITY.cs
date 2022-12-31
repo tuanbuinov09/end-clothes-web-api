@@ -18,6 +18,12 @@ namespace ClothingWebAPI.Entities
         public int TONG_GIA_NHAP { get; set; }
         public int TONG_GIA_TRA { get; set; }
         public int TONG_LOI_NHUAN { get; set; }
+        public string MA_SP { get; set; }
+        public string TEN_SP { get; set; }
+        public string TEN_TL { get; set; }
+        public int SO_LUONG { get; set; }
+        public int GIA_BAN_TRUNG_BINH { get; set; }
+        public int GIA_NHAP_TRUNG_BINH { get; set; }
         public COL_CHART_DATA_ENTITY()
         {
             

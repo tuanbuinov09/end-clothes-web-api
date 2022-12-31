@@ -799,8 +799,140 @@ namespace ClothingWebAPI.Controllers
             }
             return data;
         }
+
+        [HttpGet]
+        [Route("product-buy-count")]
+        public async Task<IList<COL_CHART_DATA_ENTITY>> GetDataProductBuyCountOfCurrentNMonthChart([FromQuery(Name = "n")] int n, [FromQuery(Name = "top")] int top)
+        {
+            var data = new List<COL_CHART_DATA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("BAO_CAO_SO_LUONG_MUA_CUA_CAC_SP_CUA_N_THANG_GAN_NHAT", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@n", SqlDbType.VarChar).Value = n;
+                    cmd.Parameters.Add("@top", SqlDbType.VarChar).Value = top;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToList<COL_CHART_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return data;
+        }
+
+        [HttpGet]
+        [Route("category-buy-count")]
+        public async Task<IList<COL_CHART_DATA_ENTITY>> GetDataCategoryBuyCountOfCurrentNMonthChart([FromQuery(Name = "n")] int n, [FromQuery(Name = "top")] int top)
+        {
+            var data = new List<COL_CHART_DATA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("BAO_CAO_SO_LUONG_MUA_CUA_CAC_TL_CUA_N_THANG_GAN_NHAT", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@n", SqlDbType.VarChar).Value = n;
+                    cmd.Parameters.Add("@top", SqlDbType.VarChar).Value = top;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToList<COL_CHART_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return data;
+        }
+
+        [HttpGet]
+        [Route("profit-current-quarter")]
+        public async Task<IList<COL_CHART_DATA_ENTITY>> GetDataCategoryProfitOfCurrentQuarter()
+        {
+            var data = new List<COL_CHART_DATA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand("BAO_CAO_LOI_NHUAN_THEO_QUY_HIEN_TAI", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToList<COL_CHART_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+
+            return data;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("report-profit-by-prod")]
+        public async Task<IList<COL_CHART_DATA_ENTITY>> baoCaoDoanhThuLoiNhuanTheoSanPham([FromQuery(Name = "from")] DateTime from, [FromQuery(Name = "to")] DateTime to, [FromQuery(Name = "type")] string type)
+        {
+            var data = new List<COL_CHART_DATA_ENTITY>();
+            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+
+            string spName = "BAO_CAO_DOANH_THU_LOI_NHUAN_THEO_SAN_PHAM_THEO_THANG";
+            if (type == "day")
+            {
+                spName = "BAO_CAO_DOANH_THU_LOI_NHUAN_THEO_SAN_PHAM_THEO_NGAY";
+            }
+            if (type == "rangeDay")
+            {
+                spName = "BAO_CAO_DOANH_THU_LOI_NHUAN_THEO_SAN_PHAM_THEO_KHOANG_NGAY";
+            }
+            if (type == "quarter")
+            {
+                spName = "BAO_CAO_DOANH_THU_LOI_NHUAN_THEO_SAN_PHAM_THEO_QUY";
+            }
+            if (type == "year")
+            {
+                spName = "BAO_CAO_DOANH_THU_LOI_NHUAN_THEO_SAN_PHAM_THEO_NAM";
+            }
+            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
+            {
+                // Use count to get all available items before the connection closes
+                using (SqlCommand cmd = new SqlCommand(spName, con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@NGAY", SqlDbType.DateTime).Value = from;
+                    if (type == "rangeDay")
+                    {
+                        cmd.Parameters.Add("@NGAY2", SqlDbType.DateTime).Value = to;
+                    }
+                    cmd.Connection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Map data to Order class using this way
+                        data = HelperFunction.DataReaderMapToList<COL_CHART_DATA_ENTITY>(reader);
+                    }
+                    cmd.Connection.Close();
+                }
+            }
+            return data;
+        }
     }
 
+   
 
 
 
