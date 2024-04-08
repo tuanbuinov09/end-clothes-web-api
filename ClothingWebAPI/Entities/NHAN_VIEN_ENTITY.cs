@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ClothingWebAPI.Entities
 {
     public partial class NHAN_VIEN_ENTITY
     {
-        public NHAN_VIEN_ENTITY()
-        {
-            
-        }
-
         public string MA_NV { get; set; }
         public string HO_TEN { get; set; }
         public string SDT { get; set; }

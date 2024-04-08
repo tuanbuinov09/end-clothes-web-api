@@ -22,7 +22,6 @@ namespace ClothingWebAPI.Models
         public short? TRANG_THAI { get; set; }
         public string MA_NV_DUYET { get; set; }
         public string MA_NV_GIAO { get; set; }
-
         public KHACH_HANG MA_KHNavigation { get; set; }
         public NHAN_VIEN MA_NV_DUYETNavigation { get; set; }
         public NHAN_VIEN MA_NV_GIAONavigation { get; set; }

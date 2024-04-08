@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
@@ -10,7 +9,6 @@ namespace ClothingWebAPI.Models
         public short DANH_GIA { get; set; }
         public string NOI_DUNG { get; set; }
         public DateTime NGAY_DANH_GIA { get; set; }
-
         public KHACH_HANG MA_KHNavigation { get; set; }
         public SAN_PHAM MA_SPNavigation { get; set; }
     }

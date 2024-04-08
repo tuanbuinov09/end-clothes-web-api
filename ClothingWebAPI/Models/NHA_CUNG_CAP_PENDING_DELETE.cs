@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ClothingWebAPI.Models
+﻿namespace ClothingWebAPI.Models
 {
     public partial class NHA_CUNG_CAP_PENDING_DELETE
     {

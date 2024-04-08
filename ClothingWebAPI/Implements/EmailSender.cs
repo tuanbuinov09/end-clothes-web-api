@@ -1,15 +1,9 @@
 ﻿using ClothingWebAPI.Entities;
+using ClothingWebAPI.Interfaces;
 using MailKit.Net.Smtp;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ClothingWebAPI.Interfaces
+namespace ClothingWebAPI.Implements
 {
     public class EmailSender : IEmailSender
     {
@@ -31,11 +25,14 @@ namespace ClothingWebAPI.Interfaces
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
             //  emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = string.Format("<p>Chào bạn,</p><p>Đây là mã xác thực để bạn thay đổi mật khẩu:</p><div style = \"display:flex; justify-content: center;\"><p style = \"background: #009eb6; padding: 12px; color: white;\">{0}</p></div>"
-            , message.Content) };
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = string.Format("<p>Chào bạn,</p><p>Đây là mã xác thực để bạn thay đổi mật khẩu:</p><div style = \"display:flex; justify-content: center;\"><p style = \"background: #009eb6; padding: 12px; color: white;\">{0}</p></div>"
+            , message.Content)
+            };
             return emailMessage;
         }
-       
+
         private void Send(MimeMessage mailMessage)
         {
             using (var client = new SmtpClient())

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ClothingWebAPI.Entities
+﻿namespace ClothingWebAPI.Entities
 {
     public partial class CHI_TIET_SAN_PHAM_ENTITY
     {
-        public CHI_TIET_SAN_PHAM_ENTITY()
-        {
-          
-        }
         public int ID_DH { get; set; }
         public int MA_CT_SP { get; set; }
         public string MA_SP { get; set; }
@@ -21,6 +14,5 @@ namespace ClothingWebAPI.Entities
         public int? GIA { get; set; }
         public int SO_LUONG { get; set; }
         public int? SL_TON { get; set; }
-
     }
 }

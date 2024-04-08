@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ClothingWebAPI.Models
 {
@@ -17,14 +15,12 @@ namespace ClothingWebAPI.Models
 
         public virtual DbSet<BANG_MAU> BANG_MAU { get; set; }
         public virtual DbSet<BANG_SIZE> BANG_SIZE { get; set; }
-        public virtual DbSet<CHI_TIET_DON_DAT_HANG_PENDING_DELETE> CHI_TIET_DON_DAT_HANG_PENDING_DELETE { get; set; }
         public virtual DbSet<CHI_TIET_GIO_HANG> CHI_TIET_GIO_HANG { get; set; }
         public virtual DbSet<CHI_TIET_KHUYEN_MAI> CHI_TIET_KHUYEN_MAI { get; set; }
         public virtual DbSet<CHI_TIET_PHIEU_NHAP> CHI_TIET_PHIEU_NHAP { get; set; }
         public virtual DbSet<CHI_TIET_PHIEU_TRA> CHI_TIET_PHIEU_TRA { get; set; }
         public virtual DbSet<CHI_TIET_SAN_PHAM> CHI_TIET_SAN_PHAM { get; set; }
         public virtual DbSet<DANH_GIA_SAN_PHAM> DANH_GIA_SAN_PHAM { get; set; }
-        public virtual DbSet<DON_DAT_HANG_PENDING_DELETE> DON_DAT_HANG_PENDING_DELETE { get; set; }
         public virtual DbSet<GIO_HANG> GIO_HANG { get; set; }
         public virtual DbSet<HINH_ANH_SAN_PHAM> HINH_ANH_SAN_PHAM { get; set; }
         public virtual DbSet<HOA_DON> HOA_DON { get; set; }
@@ -81,19 +77,6 @@ namespace ClothingWebAPI.Models
                 entity.Property(e => e.TEN_SIZE)
                     .IsRequired()
                     .HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<CHI_TIET_DON_DAT_HANG_PENDING_DELETE>(entity =>
-            {
-                entity.HasKey(e => new { e.MA_DDH, e.MA_CT_SP });
-
-                entity.Property(e => e.MA_DDH)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.MA_CT_SP)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CHI_TIET_GIO_HANG>(entity =>
@@ -247,27 +230,6 @@ namespace ClothingWebAPI.Models
                     .HasForeignKey(d => d.MA_SP)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DANH_GIA_SAN_PHAM_SAN_PHAM");
-            });
-
-            modelBuilder.Entity<DON_DAT_HANG_PENDING_DELETE>(entity =>
-            {
-                entity.HasKey(e => e.MA_DDH);
-
-                entity.Property(e => e.MA_DDH)
-                    .HasMaxLength(15)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.MA_NCC)
-                    .IsRequired()
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.MA_NV)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NGAY_TAO).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<GIO_HANG>(entity =>

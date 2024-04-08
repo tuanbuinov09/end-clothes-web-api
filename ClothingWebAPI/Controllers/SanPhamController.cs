@@ -1,20 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClothingWebAPI.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using System.Data;
-using ClothingWebAPI.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using ClothingWebAPI.Entities;
-using System.Data.Common;
-using System.Reflection;
+using System.Data.SqlClient;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-
+using System.Linq;
 namespace ClothingWebAPI.Controllers
 {
     [ApiController]
@@ -29,25 +22,6 @@ namespace ClothingWebAPI.Controllers
             _logger = logger;
             _configuration = configuration;
         }
-
-        //public static List<T> DataReaderMapToList<T>(DbDataReader dr)
-        //{
-        //    List<T> list = new List<T>();
-        //    while (dr.Read())
-        //    {
-        //        var obj = Activator.CreateInstance<T>();
-        //        foreach (PropertyInfo prop in obj.GetType().GetProperties())
-        //        {
-        //            if (!Equals(dr[prop.Name], DBNull.Value))
-        //            {
-        //                prop.SetValue(obj, dr[prop.Name], null);
-        //            }
-        //        }
-        //        list.Add(obj);
-        //    }
-        //    return list;
-        //}
-
 
         [HttpGet]
         [Route("all")]
@@ -70,15 +44,6 @@ namespace ClothingWebAPI.Controllers
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
@@ -97,26 +62,17 @@ namespace ClothingWebAPI.Controllers
                 using (SqlCommand cmd = new SqlCommand("LAY_SP_MOI_VE", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    if(top!=null && top != "")
+                    if (top != null && top != "")
                     {
                         cmd.Parameters.Add("@top", SqlDbType.Int).Value = top; // có thể null
                     }
-                   
+
                     cmd.Connection.Open();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
@@ -147,15 +103,6 @@ namespace ClothingWebAPI.Controllers
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
@@ -188,15 +135,6 @@ namespace ClothingWebAPI.Controllers
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
@@ -227,60 +165,13 @@ namespace ClothingWebAPI.Controllers
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
             }
             return listSanPham;
         }
-        [HttpGet]
-        [Route("by-category")]
-        public IList<SAN_PHAM_ENTITY> GetSanPhamTheoTheLoai([FromQuery(Name = "top")] string top, [FromQuery(Name = "categoryId")] string categoryId)
-        {
-            var listSanPham = new List<SAN_PHAM_ENTITY>();
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("LAY_SP_THEO_THE_LOAI", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    if (top != null && top != "")
-                    {
-                        cmd.Parameters.Add("@top", SqlDbType.Int).Value = top; // có thể null
-                    }
-                    cmd.Parameters.Add("@MA_TL", SqlDbType.VarChar).Value = categoryId; // có thể null
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        // Map data to Order class using this way
-                        listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-            }
-            return listSanPham;
-        }
         [HttpGet]
         [Route("search")]
         public IList<SAN_PHAM_ENTITY> SearchSanPham([FromQuery(Name = "top")] string top, [FromQuery(Name = "keyword")] string keyword)
@@ -327,7 +218,7 @@ namespace ClothingWebAPI.Controllers
 
         [HttpPost]
         [Route("search2")]
-        public async Task<IList<SAN_PHAM_ENTITY>> PostSearchKeyword(SearchInputEntity searchInputEntity)
+        public IList<SAN_PHAM_ENTITY> PostSearchKeyword(SearchInputEntity searchInputEntity)
         {
             var listSanPham = new List<SAN_PHAM_ENTITY>();
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
@@ -355,15 +246,6 @@ namespace ClothingWebAPI.Controllers
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
@@ -392,15 +274,6 @@ namespace ClothingWebAPI.Controllers
                     {
                         // Map data to Order class using this way
                         listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
@@ -420,19 +293,11 @@ namespace ClothingWebAPI.Controllers
                         {
                             listSanPham[0].chiTietSanPham = HelperFunction.DataReaderMapToList<CHI_TIET_SAN_PHAM_ENTITY>(reader).ToList();
 
-                        }catch(Exception ex)
-                        {
-                            Debug.Write("catch truowngf hop ma k ton tai nen k the tim ctsp");
                         }
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
+                        catch (Exception ex)
+                        {
+                            Debug.Write(ex.Message);
+                        }
                     }
                     cmd.Connection.Close();
                 }
@@ -452,28 +317,21 @@ namespace ClothingWebAPI.Controllers
                         {
                             listSanPham[0].hinhAnhSanPham = HelperFunction.DataReaderMapToList<HINH_ANH_SAN_PHAM_ENTITY>(reader).ToList();
 
-                        }catch(Exception ex)
-                        {
-                            Debug.Write("catch truowngf hop ma k ton tai nen k the tim ctsp");
                         }
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
+                        catch (Exception ex)
+                        {
+                            Debug.Write(ex.Message);
+                        }
                     }
                     cmd.Connection.Close();
                 }
             }
             return listSanPham;
         }
+
         [HttpPut]
         [Route("incre-view")]
-        public RESPONSE_ENTITY IncreaseViewCount([FromQuery(Name = "productId")] string productId)
+        public IList<RESPONSE_ENTITY> IncreaseViewCount([FromQuery(Name = "productId")] string productId)
         {
             var response = new List<RESPONSE_ENTITY>();
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
@@ -491,30 +349,15 @@ namespace ClothingWebAPI.Controllers
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
-
-                        // Map data to Order class using this way
-                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
-
             }
-            return response[0];
+            return response;
         }
 
-        [Authorize]
         [HttpPost]
         [Route("add")]
-        
         public RESPONSE_ENTITY InsertProduct([FromBody] SAN_PHAM_ENTITY body)
         {
             // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
@@ -544,81 +387,13 @@ namespace ClothingWebAPI.Controllers
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
-
-                        // Map data to Order class using this way
-                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
                     }
                     cmd.Connection.Close();
                 }
-
             }
             return response[0];
         }
 
-        [Authorize]
-        [HttpPut]
-        [Route("edit")]
-        public RESPONSE_ENTITY EditProduct([FromBody] SAN_PHAM_ENTITY body)
-        {
-            // chuyển list thành xml string để sql có thể đọc, xem store THEM_SAN_PHAM để biết thêm chi tiết
-            var listHinhAnhSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.hinhAnhSanPham);
-            var listChiTietSanPham_Xml = HelperFunction.ConvertObjectToXMLString(body.chiTietSanPham);
-            var response = new List<RESPONSE_ENTITY>();
-
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("SUA_SAN_PHAM", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@TEN_SP", SqlDbType.NVarChar).Value = body.TEN_SP;
-                    cmd.Parameters.Add("@MA_TL", SqlDbType.VarChar).Value = body.MA_TL;
-                    cmd.Parameters.Add("@HINH_ANH", SqlDbType.NVarChar).Value = body.HINH_ANH;
-                    cmd.Parameters.Add("@MO_TA", SqlDbType.NVarChar).Value = body.MO_TA;
-                    cmd.Parameters.Add("@MA_NV", SqlDbType.VarChar).Value = body.MA_NV;
-
-                    cmd.Parameters.Add("@xml_LIST_HINH_ANH_SP_STR", SqlDbType.NVarChar).Value = listHinhAnhSanPham_Xml;
-                    cmd.Parameters.Add("@xml_LIST_CHI_TIET_SP_STR", SqlDbType.NVarChar).Value = listChiTietSanPham_Xml;
-
-                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = body.MA_SP;
-
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
-
-                        // Map data to Order class using this way
-                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-
-            }
-            return response[0];
-        }
-
-        [Authorize]
         [HttpDelete]
         [Route("delete")]
         public RESPONSE_ENTITY DeleteProduct([FromQuery(Name = "productId")] string productId)
@@ -639,213 +414,11 @@ namespace ClothingWebAPI.Controllers
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
-
                     }
                     cmd.Connection.Close();
                 }
-
             }
             return response[0];
         }
-        [HttpGet]
-        [Route("detail-for-import")]
-        public IList<CHI_TIET_SAN_PHAM_ENTITY> GetChiTietSanPhamForImport([FromQuery(Name = "productId")] string productId)
-        {
-            var listCTSanPham = new List<CHI_TIET_SAN_PHAM_ENTITY>();
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("LAY_DS_CHI_TIET_CUA_SP", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@productId", SqlDbType.VarChar).Value = productId;//có thể null
-
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        // Map data to Order class using this way
-                        listCTSanPham = HelperFunction.DataReaderMapToList<CHI_TIET_SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-
-            }
-            return listCTSanPham;
-        }
-
-        [HttpGet]
-        [Route("detail-for-price-change")]
-        public IList<THAY_DOI_GIA_ENTITY> GetChiTietSanPhamForPriceChange([FromQuery(Name = "productId")] string productId)
-        {
-            var listCTSanPham = new List<THAY_DOI_GIA_ENTITY>();
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("LAY_DS_CHI_TIET_CUA_SP_KEM_GIA_HIEN_TAI", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@productId", SqlDbType.VarChar).Value = productId;//có thể null
-
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        // Map data to Order class using this way
-                        listCTSanPham = HelperFunction.DataReaderMapToList<THAY_DOI_GIA_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-
-            }
-            return listCTSanPham;
-        }
-
-
-        [HttpGet]
-        [Route("check-can-comment")]
-        public RESPONSE_ENTITY checkIfUserCanComment([FromQuery(Name = "productId")] string productId, [FromQuery(Name = "customerId")] string customerId)
-        {
-            var response = new List<RESPONSE_ENTITY>();
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("KIEM_TRA_KHACH_HANG_CO_THE_DANH_GIA_SP", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = productId;
-                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = customerId;
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        // Map data to Order class using this way
-                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-
-            }
-            return response[0];
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("rate")]
-        public RESPONSE_ENTITY rateProduct([FromBody] DANH_GIA_SAN_PHAM_ENTITY body)
-        {
-           
-            var response = new List<RESPONSE_ENTITY>();
-
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("THEM_DANH_GIA_SAN_PHAM", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = body.MA_SP;
-                    cmd.Parameters.Add("@MA_KH", SqlDbType.VarChar).Value = body.MA_KH;
-                    cmd.Parameters.Add("@DANH_GIA", SqlDbType.Int).Value = body.DANH_GIA;
-                    cmd.Parameters.Add("@NOI_DUNG", SqlDbType.NVarChar).Value = body.NOI_DUNG;
-
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        response = HelperFunction.DataReaderMapToList<RESPONSE_ENTITY>(reader).ToList();
-
-                        // Map data to Order class using this way
-                        //listSanPham = HelperFunction.DataReaderMapToList<SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-
-            }
-            return response[0];
-        }
-
-
-        [HttpGet]
-        [Route("all-comment")]
-        public List<DANH_GIA_SAN_PHAM_ENTITY> getAllComment([FromQuery(Name = "productId")] string productId)
-        {
-            var response = new List<DANH_GIA_SAN_PHAM_ENTITY>();
-            //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
-            {
-                // Use count to get all available items before the connection closes
-                using (SqlCommand cmd = new SqlCommand("LAY_TAT_CA_DANH_GIA_CUA_SAN_PHAM", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@MA_SP", SqlDbType.VarChar).Value = productId;
-                    cmd.Connection.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        // Map data to Order class using this way
-                        response = HelperFunction.DataReaderMapToList<DANH_GIA_SAN_PHAM_ENTITY>(reader).ToList();
-
-                        // instead of this traditional way
-                        // while (reader.Read())
-                        // {
-                        // var o = new Order();
-                        // o.OrderID = Convert.ToInt32(reader["OrderID"]);
-                        // o.CustomerID = reader["CustomerID"].ToString();
-                        // orders.Add(o);
-                        // }
-                    }
-                    cmd.Connection.Close();
-                }
-
-            }
-            return response;
-        }
-        
     }
-
 }

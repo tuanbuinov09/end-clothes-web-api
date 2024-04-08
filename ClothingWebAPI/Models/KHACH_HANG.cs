@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
@@ -19,7 +18,6 @@ namespace ClothingWebAPI.Models
         public string DIA_CHI { get; set; }
         public string MA_SO_THUE { get; set; }
         public string MA_TK { get; set; }
-
         public TAI_KHOAN MA_TKNavigation { get; set; }
         public ICollection<DANH_GIA_SAN_PHAM> DANH_GIA_SAN_PHAM { get; set; }
         public ICollection<GIO_HANG> GIO_HANG { get; set; }

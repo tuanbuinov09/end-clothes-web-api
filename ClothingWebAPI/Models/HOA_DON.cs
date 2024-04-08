@@ -14,7 +14,6 @@ namespace ClothingWebAPI.Models
         public int ID_GH { get; set; }
         public DateTime NGAY_TAO { get; set; }
         public string MA_NV { get; set; }
-
         public GIO_HANG ID_GHNavigation { get; set; }
         public NHAN_VIEN MA_NVNavigation { get; set; }
         public ICollection<PHIEU_TRA> PHIEU_TRA { get; set; }

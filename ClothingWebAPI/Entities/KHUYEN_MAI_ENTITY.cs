@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClothingWebAPI.Entities
 {
     public class KHUYEN_MAI_ENTITY
     {
-            public KHUYEN_MAI_ENTITY()
-        {
-        }
         public string MA_KM { get; set; }
         public DateTime? NGAY_TAO { get; set; }
         public DateTime? NGAY_AP_DUNG { get; set; }
@@ -22,6 +17,5 @@ namespace ClothingWebAPI.Entities
         public int DANG_KHUYEN_MAI { get; set; }
         public bool TRANG_THAI { get; set; }
         public List<CHI_TIET_KHUYEN_MAI_ENTITY> chiTietKhuyenMai { get; set; }
-
     }
 }

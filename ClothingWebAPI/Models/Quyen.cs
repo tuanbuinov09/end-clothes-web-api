@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
@@ -12,7 +11,6 @@ namespace ClothingWebAPI.Models
 
         public string MA_QUYEN { get; set; }
         public string TEN_QUYEN { get; set; }
-
         public ICollection<TAI_KHOAN> TAI_KHOAN { get; set; }
     }
 }

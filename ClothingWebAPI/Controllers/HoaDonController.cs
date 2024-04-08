@@ -1,16 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
+﻿using ClothingWebAPI.Entities;
 using ClothingWebAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using ClothingWebAPI.Entities;
-using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -21,13 +15,15 @@ namespace ClothingWebAPI.Controllers
         private readonly ILogger<BangSizeController> _logger;
 
         private readonly IConfiguration _configuration;
+
         public HoaDon(IConfiguration configuration, ILogger<BangSizeController> logger)
         {
             _logger = logger;
             _configuration = configuration;
         }
+
         [HttpGet]
-        public async Task<ActionResult<HOA_DON>> GetHDFromID_GH([FromQuery(Name = "cartId")] int cartId)
+        public ActionResult<HOA_DON> GetHDFromID_GH([FromQuery(Name = "cartId")] int cartId)
         {
             HOA_DON hd = new HOA_DON();
 
@@ -44,7 +40,7 @@ namespace ClothingWebAPI.Controllers
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        hd  = HelperFunction.DataReaderMapToEntity<HOA_DON>(reader);
+                        hd = HelperFunction.DataReaderMapToEntity<HOA_DON>(reader);
 
                     }
                     cmd.Connection.Close();
@@ -53,12 +49,10 @@ namespace ClothingWebAPI.Controllers
             return hd;
         }
 
-        [Authorize]
+
         [HttpPost]
-        public async Task<ActionResult<string>> Post(HOA_DON hoaDon)
+        public ActionResult<string> Post(HOA_DON hoaDon)
         {
-
-
             //using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (var con = new SqlConnection(_configuration.GetConnectionString("CLOTHING_STORE_CONN")))
             {
@@ -81,6 +75,5 @@ namespace ClothingWebAPI.Controllers
             }
             return "";
         }
-
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
@@ -18,7 +17,6 @@ namespace ClothingWebAPI.Models
         public string MA_MAU { get; set; }
         public string MA_SIZE { get; set; }
         public int SL_TON { get; set; }
-
         public BANG_MAU MA_MAUNavigation { get; set; }
         public BANG_SIZE MA_SIZENavigation { get; set; }
         public SAN_PHAM MA_SPNavigation { get; set; }

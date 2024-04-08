@@ -1,21 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace ClothingWebAPI.Entities
 {
     public class HelperFunction
     {
-        // hàm map entity với kết quả store trả về
+        // function to map entity with data returned from store-procedure
         public static List<T> DataReaderMapToList<T>(DbDataReader dr)
         {
             // Map data to Order class using this way
@@ -41,11 +38,10 @@ namespace ClothingWebAPI.Entities
                             prop.SetValue(obj, dr[prop.Name], null);
                         }
                     }
-                    catch (Exception ex) //bắt lỗi không có cột trong entity trong khi store trả về có
+                    catch (Exception ex) //catch when entity dont have property that match stored-procedure's return data
                     {
-                        Debug.Write("////--- lỗi mapping, catched exception, map tiếp cột khác");
+                        Debug.Write(ex.Message);
                     }
-
                 }
                 list.Add(obj);
             }
@@ -66,17 +62,15 @@ namespace ClothingWebAPI.Entities
                             prop.SetValue(obj, dr[prop.Name], null);
                         }
                     }
-                    catch (Exception ex) //bắt lỗi không có cột trong entity trong khi store trả về có
+                    catch (Exception ex) //catch when entity dont have property that match stored-procedure's return data
                     {
-                        Debug.Write("////--- lỗi mapping, catched exception, map tiếp cột khác");
+                        Debug.Write(ex.Message);
                     }
-
                 }
                 return obj;
             }
             return default(T);
         }
-
 
         public static string ConvertObjectToXMLString(object classObject)
         {
@@ -90,7 +84,6 @@ namespace ClothingWebAPI.Entities
             }
             return xmlString;
         }
-
 
         public static string ComputeHash(string plainText, string hashAlgorithm, byte[] saltBytes)
         {
@@ -174,10 +167,9 @@ namespace ClothingWebAPI.Entities
             // Return the result.
             return hashValue;
         }
-        
+
         public static bool VerifyHash(string plainText, string hashAlgorithm, string hashValue)
         {
-
             // Convert base64-encoded hash value into a byte array.
             byte[] hashWithSaltBytes = Convert.FromBase64String(hashValue);
 
@@ -191,7 +183,6 @@ namespace ClothingWebAPI.Entities
             // Size of hash is based on the specified algorithm.
             switch (hashAlgorithm.ToUpper())
             {
-
                 case "SHA384":
                     hashSizeInBits = 384;
                     break;
@@ -226,6 +217,7 @@ namespace ClothingWebAPI.Entities
             // the plain text value must be correct.
             return (hashValue == expectedHashString);
         }
+
         public static string GetNumericOTP()
         {
             string numbers = "0123456789";
@@ -238,6 +230,5 @@ namespace ClothingWebAPI.Entities
             }
             return otp;
         }
-
     }
 }

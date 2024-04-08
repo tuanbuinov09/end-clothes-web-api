@@ -15,7 +15,6 @@ namespace ClothingWebAPI.Models
         public DateTime? NGAY_AP_DUNG { get; set; }
         public int? THOI_GIAN { get; set; }
         public string MO_TA { get; set; }
-
         public NHAN_VIEN MA_NVNavigation { get; set; }
         public ICollection<CHI_TIET_KHUYEN_MAI> CHI_TIET_KHUYEN_MAI { get; set; }
     }

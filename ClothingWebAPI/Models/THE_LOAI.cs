@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClothingWebAPI.Models
 {
@@ -14,7 +13,6 @@ namespace ClothingWebAPI.Models
         public string TEN_TL { get; set; }
         public short CAP_TL { get; set; }
         public string MA_TL_CHA { get; set; }
-
         public ICollection<SAN_PHAM> SAN_PHAM { get; set; }
     }
 }

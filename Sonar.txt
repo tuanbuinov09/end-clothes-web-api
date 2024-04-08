@@ -1,0 +1,11 @@
+SonarQube
+AnalyzeEndclothes -sqp_8934c40a3d7e0b823ffe30fdf12da87360800e43
+
+Command 1
+dotnet sonarscanner begin /k:"ENDCLOTHES" /d:sonar.host.url="http://localhost:9000"  /d:sonar.token="sqp_8934c40a3d7e0b823ffe30fdf12da87360800e43"
+
+Command 2
+dotnet build
+
+Command 3
+dotnet sonarscanner end /d:sonar.token="sqp_8934c40a3d7e0b823ffe30fdf12da87360800e43"

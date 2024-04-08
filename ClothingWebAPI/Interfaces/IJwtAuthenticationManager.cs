@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClothingWebAPI.Interfaces
 {
@@ -11,6 +8,5 @@ namespace ClothingWebAPI.Interfaces
         {
             throw new NotImplementedException();
         }
-        
     }
 }
