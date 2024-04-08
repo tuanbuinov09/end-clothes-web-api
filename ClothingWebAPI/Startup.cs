@@ -1,4 +1,4 @@
-﻿using ClothingWebAPI.Entities;
+﻿using ClothingWebAPI.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -55,12 +55,13 @@ namespace ClothingWebAPI
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
+
             //jwt
             var jwtSection = Configuration.GetSection("JWTSettings");
-            services.Configure<JWTSettings>(jwtSection);
+            services.Configure<JWTSetting>(jwtSection);
 
             //to validate the token which has been sent by clients
-            var appSettings = jwtSection.Get<JWTSettings>();
+            var appSettings = jwtSection.Get<JWTSetting>();
             var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
 
             services.AddAuthentication(x =>
@@ -90,7 +91,7 @@ namespace ClothingWebAPI
                 {
                     Title = "Clothing Website API v1",
                     Version = "v1",
-                    Description = "Đồ án thực tập.",
+                    Description = "Đồ án tốt nghiệp.",
                     Contact = new OpenApiContact
                     {
                         Name = "Bùi Quốc Tuấn",
@@ -116,8 +117,7 @@ namespace ClothingWebAPI
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider
-              (Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
                 RequestPath = new PathString("/Images")
             });
 

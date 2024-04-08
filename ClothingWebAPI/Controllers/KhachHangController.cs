@@ -1,4 +1,6 @@
 ﻿using ClothingWebAPI.Entities;
+using ClothingWebAPI.Helpers;
+using ClothingWebAPI.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,9 +17,9 @@ namespace ClothingWebAPI.Controllers
     public class KhachHangController : ControllerBase
     {
         private readonly ILogger<KhachHangController> _logger;
-        private readonly JWTSettings _jwtsettings;
+        private readonly JWTSetting _jwtsettings;
         private readonly IConfiguration _configuration;
-        public KhachHangController(IConfiguration configuration, ILogger<KhachHangController> logger, IOptions<JWTSettings> jwtsettings)
+        public KhachHangController(IConfiguration configuration, ILogger<KhachHangController> logger, IOptions<JWTSetting> jwtsettings)
         {
             _logger = logger;
             _configuration = configuration;

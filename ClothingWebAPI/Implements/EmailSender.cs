@@ -1,4 +1,5 @@
-﻿using ClothingWebAPI.Entities;
+﻿using ClothingWebAPI.Configurations;
+using ClothingWebAPI.Email;
 using ClothingWebAPI.Interfaces;
 using MailKit.Net.Smtp;
 using MimeKit;

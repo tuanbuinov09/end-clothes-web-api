@@ -1,4 +1,4 @@
-﻿using ClothingWebAPI.Entities;
+﻿using ClothingWebAPI.Email;
 
 namespace ClothingWebAPI.Interfaces
 {

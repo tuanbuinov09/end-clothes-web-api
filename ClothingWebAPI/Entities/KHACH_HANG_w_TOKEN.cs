@@ -15,7 +15,9 @@
             this.MA_QUYEN = khachHang.MA_QUYEN;
             this.TEN_QUYEN = khachHang.TEN_QUYEN;
         }
+
         public string AccessToken { get; set; }
+
         public string RefreshToken { get; set; }
     }
 }

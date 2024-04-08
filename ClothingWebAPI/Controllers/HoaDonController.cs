@@ -1,4 +1,4 @@
-﻿using ClothingWebAPI.Entities;
+﻿using ClothingWebAPI.Helpers;
 using ClothingWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

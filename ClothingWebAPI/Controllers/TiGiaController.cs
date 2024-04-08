@@ -1,14 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System.Data;
-using ClothingWebAPI.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -19,11 +13,13 @@ namespace ClothingWebAPI.Controllers
         private readonly ILogger<TiGiaController> _logger;
 
         private readonly IConfiguration _configuration;
+
         public TiGiaController(IConfiguration configuration, ILogger<TiGiaController> logger)
         {
             _logger = logger;
             _configuration = configuration;
         }
+
         [Route("current")]
         [HttpGet]
         public int GetCurrentUSD_VNDRate()

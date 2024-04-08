@@ -1,4 +1,5 @@
 ﻿using ClothingWebAPI.Entities;
+using ClothingWebAPI.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ namespace ClothingWebAPI.Controllers
         private readonly ILogger<SanPhamController> _logger;
 
         private readonly IConfiguration _configuration;
+
         public SanPhamController(IConfiguration configuration, ILogger<SanPhamController> logger)
         {
             _logger = logger;
@@ -50,6 +52,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listSanPham;
         }
+
         [HttpGet]
         [Route("new-arrivals")]
         public IList<SAN_PHAM_ENTITY> GetSanPhamMoiTao([FromQuery(Name = "top")] string top)
@@ -79,6 +82,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listSanPham;
         }
+
         [HttpGet]
         [Route("most-viewed")]
         public IList<SAN_PHAM_ENTITY> GetSanPhamXemNhieu([FromQuery(Name = "top")] string top)
@@ -109,6 +113,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listSanPham;
         }
+
         [HttpGet]
         [Route("best-seller")]
         public IList<SAN_PHAM_ENTITY> GetSanPhamBanChayTrongNThangGanNhat([FromQuery(Name = "top")] string top, [FromQuery(Name = "month")] string month)
@@ -141,6 +146,7 @@ namespace ClothingWebAPI.Controllers
             }
             return listSanPham;
         }
+
         [HttpGet]
         [Route("sale-off")]
         public IList<SAN_PHAM_ENTITY> GetSanPhamDangKhuyenMai([FromQuery(Name = "top")] string top)

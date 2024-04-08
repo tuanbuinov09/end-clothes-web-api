@@ -3,9 +3,6 @@ using ClothingWebAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace ClothingWebAPI.Controllers
 {
     [Authorize]
@@ -13,18 +10,18 @@ namespace ClothingWebAPI.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IJwtAuthenticationManager jwtAuthenticationManager;
+        private readonly IJwtAuthenticationManager _jwtAuthenticationManager;
 
         public AuthenticationController(IJwtAuthenticationManager jwtAuthenticationManager)
         {
-            this.jwtAuthenticationManager = jwtAuthenticationManager;
+            this._jwtAuthenticationManager = jwtAuthenticationManager;
         }
         
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult authenticate([FromBody] KHACH_HANG_ENTITY user)
         {
-            var token = jwtAuthenticationManager.authenticate(user.EMAIL, user.MAT_KHAU);
+            var token = _jwtAuthenticationManager.authenticate(user.EMAIL, user.MAT_KHAU);
             if (token == null) { 
                 return Unauthorized();
             }

@@ -14,28 +14,51 @@ namespace ClothingWebAPI.Models
         }
 
         public virtual DbSet<BANG_MAU> BANG_MAU { get; set; }
+
         public virtual DbSet<BANG_SIZE> BANG_SIZE { get; set; }
+
         public virtual DbSet<CHI_TIET_GIO_HANG> CHI_TIET_GIO_HANG { get; set; }
+
         public virtual DbSet<CHI_TIET_KHUYEN_MAI> CHI_TIET_KHUYEN_MAI { get; set; }
+
         public virtual DbSet<CHI_TIET_PHIEU_NHAP> CHI_TIET_PHIEU_NHAP { get; set; }
+
         public virtual DbSet<CHI_TIET_PHIEU_TRA> CHI_TIET_PHIEU_TRA { get; set; }
+
         public virtual DbSet<CHI_TIET_SAN_PHAM> CHI_TIET_SAN_PHAM { get; set; }
+
         public virtual DbSet<DANH_GIA_SAN_PHAM> DANH_GIA_SAN_PHAM { get; set; }
+
         public virtual DbSet<GIO_HANG> GIO_HANG { get; set; }
+
         public virtual DbSet<HINH_ANH_SAN_PHAM> HINH_ANH_SAN_PHAM { get; set; }
+
         public virtual DbSet<HOA_DON> HOA_DON { get; set; }
+
         public virtual DbSet<KHACH_HANG> KHACH_HANG { get; set; }
+
         public virtual DbSet<KHUYEN_MAI> KHUYEN_MAI { get; set; }
+
         public virtual DbSet<NHA_CUNG_CAP_PENDING_DELETE> NHA_CUNG_CAP_PENDING_DELETE { get; set; }
+
         public virtual DbSet<NHAN_VIEN> NHAN_VIEN { get; set; }
+
         public virtual DbSet<PHIEU_NHAP> PHIEU_NHAP { get; set; }
+
         public virtual DbSet<PHIEU_TRA> PHIEU_TRA { get; set; }
+
         public virtual DbSet<QUYEN> QUYEN { get; set; }
+
         public virtual DbSet<SAN_PHAM> SAN_PHAM { get; set; }
+
         public virtual DbSet<TAI_KHOAN> TAI_KHOAN { get; set; }
+
         public virtual DbSet<THAY_DOI_GIA> THAY_DOI_GIA { get; set; }
+
         public virtual DbSet<THE_LOAI> THE_LOAI { get; set; }
+
         public virtual DbSet<TI_GIA> TI_GIA { get; set; }
+
         public virtual DbSet<YEU_THICH_SAN_PHAM> YEU_THICH_SAN_PHAM { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace ClothingWebAPI.Entities
+namespace ClothingWebAPI.Helpers
 {
     public class HelperFunction
     {
@@ -69,7 +69,7 @@ namespace ClothingWebAPI.Entities
                 }
                 return obj;
             }
-            return default(T);
+            return default;
         }
 
         public static string ConvertObjectToXMLString(object classObject)
@@ -215,7 +215,7 @@ namespace ClothingWebAPI.Entities
 
             // If the computed hash matches the specified hash,
             // the plain text value must be correct.
-            return (hashValue == expectedHashString);
+            return hashValue == expectedHashString;
         }
 
         public static string GetNumericOTP()

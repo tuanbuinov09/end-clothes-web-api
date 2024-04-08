@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClothingWebAPI.Entities
+namespace ClothingWebAPI.Email
 {
     public class MailMessage
     {
         public List<MailboxAddress> To { get; set; }
+
         public string Subject { get; set; }
+
         public string Content { get; set; }
+
         public MailMessage(IEnumerable<string> to, string subject, string content)
         {
             To = new List<MailboxAddress>();

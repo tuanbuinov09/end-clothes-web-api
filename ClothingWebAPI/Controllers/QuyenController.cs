@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
+﻿using ClothingWebAPI.Helpers;
 using ClothingWebAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using ClothingWebAPI.Entities;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace ClothingWebAPI.Controllers
 {
@@ -20,11 +17,13 @@ namespace ClothingWebAPI.Controllers
         private readonly ILogger<QuyenController> _logger;
 
         private readonly IConfiguration _configuration;
+
         public QuyenController(IConfiguration configuration, ILogger<QuyenController> logger)
         {
             _logger = logger;
             _configuration = configuration;
         }
+
         [Route("all")]
         [HttpGet]
         public IList<QUYEN> GetAll()
